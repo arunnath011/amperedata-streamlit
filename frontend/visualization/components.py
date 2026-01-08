@@ -206,7 +206,7 @@ class BaseChart(ABC):
 
     def _apply_styling(self) -> None:
         """Apply styling configuration to traces.
-        
+
         Override in subclasses for specific styling behavior.
         """
         pass  # Default implementation - subclasses may override
