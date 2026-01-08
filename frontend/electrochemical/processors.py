@@ -242,7 +242,7 @@ class ElectrochemicalProcessor(ABC):
                 f"Smoothing failed: {str(e)}",
                 smoothing_method=method,
                 window_size=window,
-            )
+            ) from e
 
     def remove_outliers(
         self, data: np.ndarray, threshold: float = 3.0
@@ -388,7 +388,7 @@ class CycleAnalyzer(ElectrochemicalProcessor):
 
         except Exception as e:
             logger.error(f"Cycle analysis failed: {str(e)}")
-            raise CycleAnalysisError(f"Analysis failed: {str(e)}")
+            raise CycleAnalysisError(f"Analysis failed: {str(e)}") from e
 
 
 class DifferentialAnalyzer(ElectrochemicalProcessor):
@@ -499,7 +499,7 @@ class DifferentialAnalyzer(ElectrochemicalProcessor):
 
         except Exception as e:
             logger.error(f"Differential analysis failed: {str(e)}")
-            raise DifferentialAnalysisError(f"Analysis failed: {str(e)}")
+            raise DifferentialAnalysisError(f"Analysis failed: {str(e)}") from e
 
 
 class EISAnalyzer(ElectrochemicalProcessor):
@@ -584,7 +584,7 @@ class EISAnalyzer(ElectrochemicalProcessor):
 
         except Exception as e:
             logger.error(f"EIS analysis failed: {str(e)}")
-            raise EISAnalysisError(f"Analysis failed: {str(e)}")
+            raise EISAnalysisError(f"Analysis failed: {str(e)}") from e
 
 
 class RateAnalyzer(ElectrochemicalProcessor):
@@ -679,7 +679,7 @@ class RateAnalyzer(ElectrochemicalProcessor):
 
         except Exception as e:
             logger.error(f"Rate analysis failed: {str(e)}")
-            raise RateAnalysisError(f"Analysis failed: {str(e)}")
+            raise RateAnalysisError(f"Analysis failed: {str(e)}") from e
 
 
 class AgingAnalyzer(ElectrochemicalProcessor):
@@ -754,7 +754,7 @@ class AgingAnalyzer(ElectrochemicalProcessor):
 
         except Exception as e:
             logger.error(f"Aging analysis failed: {str(e)}")
-            raise AgingAnalysisError(f"Analysis failed: {str(e)}")
+            raise AgingAnalysisError(f"Analysis failed: {str(e)}") from e
 
 
 class ComparisonAnalyzer(ElectrochemicalProcessor):
@@ -850,4 +850,4 @@ class ComparisonAnalyzer(ElectrochemicalProcessor):
 
         except Exception as e:
             logger.error(f"Comparison analysis failed: {str(e)}")
-            raise StatisticalAnalysisError(f"Analysis failed: {str(e)}")
+            raise StatisticalAnalysisError(f"Analysis failed: {str(e)}") from e

@@ -369,7 +369,7 @@ class StreamlitVisualizationApp:
                 unsafe_allow_html=True,
             )
 
-            if st.button(f"Use Template", key=f"use_{template.id}"):
+            if st.button("Use Template", key=f"use_{template.id}"):
                 self._apply_template(template)
 
     def _render_data_upload(self) -> None:
@@ -420,10 +420,10 @@ class StreamlitVisualizationApp:
 
             st.selectbox("Database Type", ["PostgreSQL", "MySQL", "SQLite"])
             st.text_input("Host", "localhost")
-            port = st.number_input("Port", value=5432)
+            st.number_input("Port", value=5432)
             st.text_input("Database")
             st.text_input("Username")
-            password = st.text_input("Password", type="password")
+            st.text_input("Password", type="password")
             st.text_area("SQL Query", "SELECT * FROM experiments LIMIT 1000")
 
             if st.button("Connect and Load"):
@@ -584,7 +584,7 @@ class StreamlitVisualizationApp:
                 st.subheader("Sharing Options")
 
                 st.checkbox("Make Public")
-                share_password = st.text_input("Password (optional)", type="password")
+                st.text_input("Password (optional)", type="password")
                 st.date_input("Expiration Date")
 
                 if st.button("Generate Share Link"):
@@ -630,14 +630,14 @@ class StreamlitVisualizationApp:
 
             col1, col2 = st.columns(2)
             with col1:
-                primary_color = st.color_picker("Primary Color", "#1f77b4")
-                secondary_color = st.color_picker("Secondary Color", "#ff7f0e")
-                success_color = st.color_picker("Success Color", "#2ca02c")
+                st.color_picker("Primary Color", "#1f77b4")
+                st.color_picker("Secondary Color", "#ff7f0e")
+                st.color_picker("Success Color", "#2ca02c")
 
             with col2:
-                background_color = st.color_picker("Background Color", "#ffffff")
-                text_color = st.color_picker("Text Color", "#212529")
-                grid_color = st.color_picker("Grid Color", "#e9ecef")
+                st.color_picker("Background Color", "#ffffff")
+                st.color_picker("Text Color", "#212529")
+                st.color_picker("Grid Color", "#e9ecef")
 
             if st.button("Create Theme"):
                 st.success(f"Theme '{theme_name}' created!")
@@ -781,10 +781,10 @@ class StreamlitVisualizationApp:
         figure.update_layout(
             paper_bgcolor=theme.colors.get("background", "#ffffff"),
             plot_bgcolor=theme.colors.get("surface", "#ffffff"),
-            font=dict(
-                family=theme.fonts.get("primary", "Arial"),
-                color=theme.colors.get("text", "#212529"),
-            ),
+            font={
+                "family": theme.fonts.get("primary", "Arial"),
+                "color": theme.colors.get("text", "#212529"),
+            },
         )
 
         figure.update_xaxes(gridcolor=theme.colors.get("grid", "#e9ecef"))

@@ -404,7 +404,7 @@ elif chart_type == "State of Health (SOH)":
                         st.metric("Current Cap", f"{current_cap:.2f} Ah")
 
                         if init_cap != data["discharge_capacity"].iloc[0]:
-                            st.caption(f"Using max from first 5 cycles as baseline")
+                            st.caption("Using max from first 5 cycles as baseline")
 
                         # Simple RUL prediction
                         if len(data) > 10:
@@ -512,7 +512,7 @@ elif chart_type == "State of Health (SOH)":
                     p_lin, _ = curve_fit(linear_model, n, C, p0=[C[0], -0.1], maxfev=20000)
                     C_lin_fit = linear_model(n, *p_lin)
                     r2_lin = r2_score(C, C_lin_fit)
-                except:
+                except Exception:
                     p_lin = None
                     C_lin_fit = None
                     r2_lin = 0.0
@@ -521,7 +521,7 @@ elif chart_type == "State of Health (SOH)":
                     p_exp, _ = curve_fit(exp_model, n, C, p0=[C[0], 1e-4], maxfev=20000)
                     C_exp_fit = exp_model(n, *p_exp)
                     r2_exp = r2_score(C, C_exp_fit)
-                except:
+                except Exception:
                     p_exp = None
                     C_exp_fit = None
                     r2_exp = 0.0
@@ -530,7 +530,7 @@ elif chart_type == "State of Health (SOH)":
                     p_pow, _ = curve_fit(power_model, n, C, p0=[C[0], 0.1], maxfev=20000)
                     C_pow_fit = power_model(n, *p_pow)
                     r2_pow = r2_score(C, C_pow_fit)
-                except:
+                except Exception:
                     p_pow = None
                     C_pow_fit = None
                     r2_pow = 0.0
@@ -576,7 +576,7 @@ elif chart_type == "State of Health (SOH)":
                         y=C,
                         mode="markers",
                         name="Observed",
-                        marker=dict(size=8, color="blue"),
+                        marker={"size": 8, "color": "blue"},
                     )
                 )
 
@@ -588,7 +588,7 @@ elif chart_type == "State of Health (SOH)":
                             y=C_lin_fit,
                             mode="lines",
                             name=f"Linear (R²={r2_lin:.3f})",
-                            line=dict(dash="solid", width=2),
+                            line={"dash": "solid", "width": 2},
                         )
                     )
 
@@ -599,7 +599,7 @@ elif chart_type == "State of Health (SOH)":
                             y=C_exp_fit,
                             mode="lines",
                             name=f"Exponential (R²={r2_exp:.3f})",
-                            line=dict(dash="dash", width=2),
+                            line={"dash": "dash", "width": 2},
                         )
                     )
 
@@ -610,7 +610,7 @@ elif chart_type == "State of Health (SOH)":
                             y=C_pow_fit,
                             mode="lines",
                             name=f"Power (R²={r2_pow:.3f})",
-                            line=dict(dash="dot", width=2),
+                            line={"dash": "dot", "width": 2},
                         )
                     )
 

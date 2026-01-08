@@ -250,7 +250,7 @@ def create_saved_group_visualization(group_data, group_name, confidence_level):
             x=group_data["cycle_number"],
             y=group_data["upper_ci"],
             mode="lines",
-            line=dict(width=0),
+            line={"width": 0},
             showlegend=False,
             hoverinfo="skip",
         )
@@ -261,7 +261,7 @@ def create_saved_group_visualization(group_data, group_name, confidence_level):
             x=group_data["cycle_number"],
             y=group_data["lower_ci"],
             mode="lines",
-            line=dict(width=0),
+            line={"width": 0},
             fillcolor="rgba(255, 0, 0, 0.2)",
             fill="tonexty",
             name=f"{confidence_level}% CI",
@@ -275,9 +275,9 @@ def create_saved_group_visualization(group_data, group_name, confidence_level):
             x=group_data["cycle_number"],
             y=group_data["value"],
             mode="lines+markers",
-            name=f"Group Average",
-            line=dict(color="red", width=3),
-            marker=dict(size=6, color="red"),
+            name="Group Average",
+            line={"color": "red", "width": 3},
+            marker={"size": 6, "color": "red"},
             hovertemplate="Cycle: %{x}<br>Average: %{y:.3f} Ah<extra></extra>",
         )
     )
@@ -476,7 +476,7 @@ with st.sidebar.expander("Manage Saved Groups", expanded=False):
     if not saved_groups_df.empty:
         st.markdown(f"**{len(saved_groups_df)} saved groups**")
 
-        for idx, group in saved_groups_df.iterrows():
+        for _idx, group in saved_groups_df.iterrows():
             with st.container():
                 col1, col2, col3, col4 = st.columns([3, 1, 1, 1])
 
@@ -679,7 +679,7 @@ def add_group_trace_to_figure(fig, group_stats, name="Group Average", color="red
             x=group_stats["x"],
             y=group_stats["y_upper"],
             mode="lines",
-            line=dict(width=0),
+            line={"width": 0},
             showlegend=False,
             hoverinfo="skip",
         )
@@ -690,8 +690,8 @@ def add_group_trace_to_figure(fig, group_stats, name="Group Average", color="red
             x=group_stats["x"],
             y=group_stats["y_lower"],
             mode="lines",
-            line=dict(width=0),
-            fillcolor=f"rgba(255, 0, 0, 0.2)",
+            line={"width": 0},
+            fillcolor="rgba(255, 0, 0, 0.2)",
             fill="tonexty",
             name=f"{name} (CI)",
             hovertemplate="CI: %{y:.3f}<extra></extra>",
@@ -705,8 +705,8 @@ def add_group_trace_to_figure(fig, group_stats, name="Group Average", color="red
             y=group_stats["y_avg"],
             mode="lines+markers",
             name=name,
-            line=dict(color=color, width=3, dash="solid"),
-            marker=dict(size=6, color=color),
+            line={"color": color, "width": 3, "dash": "solid"},
+            marker={"size": 6, "color": color},
             hovertemplate=(f"{name}<br>" + "X: %{x}<br>" + "Avg: %{y:.3f}<br>" + "<extra></extra>"),
         )
     )
@@ -855,8 +855,8 @@ else:
                             y=capacity_df["discharge_capacity"],
                             mode="lines+markers",
                             name=f"{battery_id} - Discharge",
-                            line=dict(width=2 if not enable_grouping else 1),
-                            marker=dict(size=6 if not enable_grouping else 4),
+                            line={"width": 2 if not enable_grouping else 1},
+                            marker={"size": 6 if not enable_grouping else 4},
                             opacity=opacity,
                         )
                     )
@@ -914,8 +914,8 @@ else:
             height=600,
             hovermode="x unified",
             showlegend=show_legend,
-            xaxis=dict(showgrid=show_grid),
-            yaxis=dict(showgrid=show_grid),
+            xaxis={"showgrid": show_grid},
+            yaxis={"showgrid": show_grid},
             template="plotly_white",
         )
 
@@ -983,7 +983,7 @@ else:
                 int(max_cycle_result["max_cycle"].iloc[0]) if not max_cycle_result.empty else 100
             )
             max_cycle = max(max_cycle, 1)  # Ensure at least 1
-        except:
+        except Exception:
             max_cycle = 100
 
         # Cycle selection
@@ -1033,7 +1033,7 @@ else:
                                     y=cycle_data["voltage"],
                                     mode="lines",
                                     name=f"{battery_id} - Cycle {cycle}",
-                                    line=dict(width=2, color=colors[idx % len(colors)]),
+                                    line={"width": 2, "color": colors[idx % len(colors)]},
                                     legendgroup=battery_id,
                                 )
                             )
@@ -1051,7 +1051,7 @@ else:
                                     y=cycle_data["voltage"],
                                     mode="lines",
                                     name=f"{battery_id} - Cycle {cycle}",
-                                    line=dict(width=2),
+                                    line={"width": 2},
                                     opacity=0.7,
                                     legendgroup=battery_id,
                                 )
@@ -1064,7 +1064,7 @@ else:
                                 y=voltage_df["voltage"],
                                 mode="lines",
                                 name=f"{battery_id} (Cycles {cycle_numbers[0]}-{cycle_numbers[1]})",
-                                line=dict(width=2, color=colors[idx % len(colors)]),
+                                line={"width": 2, "color": colors[idx % len(colors)]},
                             )
                         )
 
@@ -1135,8 +1135,8 @@ else:
                         y=resistance_df["Re"],
                         mode="lines+markers",
                         name=battery_id,
-                        line=dict(width=2),
-                        marker=dict(size=6),
+                        line={"width": 2},
+                        marker={"size": 6},
                     )
                 )
 
@@ -1148,8 +1148,8 @@ else:
                             y=resistance_df["Rct"],
                             mode="lines+markers",
                             name=battery_id,
-                            line=dict(width=2),
-                            marker=dict(size=6),
+                            line={"width": 2},
+                            marker={"size": 6},
                         )
                     )
 
@@ -1260,7 +1260,7 @@ else:
                 int(max_cycle_result["max_cycle"].iloc[0]) if not max_cycle_result.empty else 100
             )
             max_cycle = max(max_cycle, 1)
-        except:
+        except Exception:
             max_cycle = 100
 
         # ====== UI CONTROLS ======
@@ -1398,7 +1398,7 @@ else:
                                                 window_length=window,
                                                 polyorder=poly,
                                             )
-                                        except:
+                                        except Exception:
                                             dQdV_final = dQdV_filtered
                                     else:
                                         dQdV_final = dQdV_filtered
@@ -1410,7 +1410,7 @@ else:
                                             y=dQdV_final,
                                             mode="lines",
                                             name=f"Cycle {cycle} - Charge",
-                                            line=dict(width=2, color=colors[idx % len(colors)]),
+                                            line={"width": 2, "color": colors[idx % len(colors)]},
                                             legendgroup=f"cycle_{cycle}",
                                             hovertemplate="V: %{x:.3f}V<br>dQ/dV: %{y:.1f} mAh/V",
                                         )
@@ -1437,11 +1437,11 @@ else:
                                                 y=Q,
                                                 mode="lines",
                                                 name=f"Cycle {cycle} - Charge",
-                                                line=dict(
-                                                    width=2,
-                                                    color=colors[idx % len(colors)],
-                                                    dash="solid",
-                                                ),
+                                                line={
+                                                    "width": 2,
+                                                    "color": colors[idx % len(colors)],
+                                                    "dash": "solid",
+                                                },
                                                 legendgroup=f"cycle_{cycle}",
                                             )
                                         )
@@ -1512,7 +1512,7 @@ else:
                                                 window_length=window,
                                                 polyorder=poly,
                                             )
-                                        except:
+                                        except Exception:
                                             dQdV_final = dQdV_filtered
                                     else:
                                         dQdV_final = dQdV_filtered
@@ -1524,11 +1524,11 @@ else:
                                             y=dQdV_final,
                                             mode="lines",
                                             name=f"Cycle {cycle} - Discharge",
-                                            line=dict(
-                                                width=2,
-                                                color=colors[idx % len(colors)],
-                                                dash="dash",
-                                            ),
+                                            line={
+                                                "width": 2,
+                                                "color": colors[idx % len(colors)],
+                                                "dash": "dash",
+                                            },
                                             legendgroup=f"cycle_{cycle}",
                                             hovertemplate="V: %{x:.3f}V<br>dQ/dV: %{y:.1f} mAh/V",
                                         )
@@ -1555,11 +1555,11 @@ else:
                                                 y=Q,
                                                 mode="lines",
                                                 name=f"Cycle {cycle} - Discharge",
-                                                line=dict(
-                                                    width=2,
-                                                    color=colors[idx % len(colors)],
-                                                    dash="dash",
-                                                ),
+                                                line={
+                                                    "width": 2,
+                                                    "color": colors[idx % len(colors)],
+                                                    "dash": "dash",
+                                                },
                                                 legendgroup=f"cycle_{cycle}",
                                             )
                                         )
@@ -1572,7 +1572,7 @@ else:
                                     y=cycle_df["voltage"],
                                     mode="lines",
                                     name=f"Cycle {cycle}",
-                                    line=dict(width=2, color=colors[idx % len(colors)]),
+                                    line={"width": 2, "color": colors[idx % len(colors)]},
                                     legendgroup=f"cycle_{cycle}",
                                 )
                             )
@@ -1587,13 +1587,13 @@ else:
                             showlegend=True,
                             template="plotly_white",
                             hovermode="x unified",
-                            legend=dict(
-                                orientation="v",
-                                yanchor="top",
-                                y=1,
-                                xanchor="right",
-                                x=1,
-                            ),
+                            legend={
+                                "orientation": "v",
+                                "yanchor": "top",
+                                "y": 1,
+                                "xanchor": "right",
+                                "x": 1,
+                            },
                         )
                         st.plotly_chart(fig_dqdv, use_container_width=True)
 

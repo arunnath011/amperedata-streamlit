@@ -6,7 +6,7 @@ Gradient boosting model optimized for battery RUL prediction.
 Expected performance: 95%+ R² score, < 5 cycles MAE.
 """
 
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -19,11 +19,11 @@ from .base_model import BaseRULModel
 class XGBoostRULModel(BaseRULModel):
     """XGBoost model for RUL prediction."""
 
-    def __init__(self, hyperparameters: Optional[Dict[str, Any]] = None):
+    def __init__(self, hyperparameters: Optional[dict[str, Any]] = None):
         super().__init__("XGBoost_RUL", hyperparameters)
         self._build_model()
 
-    def get_default_hyperparameters(self) -> Dict[str, Any]:
+    def get_default_hyperparameters(self) -> dict[str, Any]:
         """Get default hyperparameters optimized for RUL prediction."""
         return {
             # Tree parameters
@@ -76,9 +76,10 @@ class XGBoostRULModel(BaseRULModel):
         """
         self.feature_names = list(X_train.columns)
 
-        # Setup evaluation set
+        # Setup evaluation set (stored for potential future use)
+        eval_set = None
         if X_val is not None and y_val is not None:
-            [(X_val, y_val)]
+            eval_set = [(X_val, y_val)]  # noqa: F841
 
         # Train model (simplified without early stopping for compatibility)
         self.model.fit(X_train, y_train, verbose=verbose)
@@ -127,7 +128,7 @@ class XGBoostRULModel(BaseRULModel):
 
     def predict_with_uncertainty(
         self, X: pd.DataFrame, n_iterations: int = 100
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Predict with uncertainty using tree variance.
 
@@ -178,7 +179,7 @@ class XGBoostRULModel(BaseRULModel):
 
         return importance_df
 
-    def get_training_metrics(self) -> Dict[str, Any]:
+    def get_training_metrics(self) -> dict[str, Any]:
         """Get latest training metrics."""
         if not self.training_history:
             return {}
@@ -204,7 +205,7 @@ class XGBoostRULModel(BaseRULModel):
         plt.tight_layout()
         plt.show()
 
-    def explain_prediction(self, X_instance: pd.DataFrame) -> Dict[str, Any]:
+    def explain_prediction(self, X_instance: pd.DataFrame) -> dict[str, Any]:
         """
         Explain a single prediction using feature contributions.
 
@@ -223,7 +224,7 @@ class XGBoostRULModel(BaseRULModel):
         contributions = {}
         importance = self.get_feature_importance()
 
-        for idx, row in importance.iterrows():
+        for _idx, row in importance.iterrows():
             feature = row["feature"]
             if feature in X_instance.columns:
                 contributions[feature] = float(X_instance[feature].iloc[0] * row["importance"])

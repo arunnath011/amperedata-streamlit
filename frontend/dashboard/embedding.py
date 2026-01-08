@@ -113,7 +113,7 @@ class EmbedManager:
 
         except Exception as e:
             logger.error(f"Failed to create embed: {str(e)}")
-            raise EmbedError(f"Embed creation failed: {str(e)}")
+            raise EmbedError(f"Embed creation failed: {str(e)}") from e
 
     async def get_embed_config(self, embed_id: str) -> Optional[EmbedConfig]:
         """Get embed configuration by ID.

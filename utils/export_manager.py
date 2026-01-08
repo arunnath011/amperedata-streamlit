@@ -110,7 +110,7 @@ class ExportManager:
                     try:
                         if len(str(cell.value)) > max_length:
                             max_length = len(cell.value)
-                    except:
+                    except Exception:
                         pass
                 adjusted_width = min(max_length + 2, 50)
                 worksheet.column_dimensions[column_letter].width = adjusted_width
@@ -170,7 +170,7 @@ class ExportManager:
                         try:
                             if len(str(cell.value)) > max_length:
                                 max_length = len(cell.value)
-                        except:
+                        except Exception:
                             pass
                     adjusted_width = min(max_length + 2, 50)
                     worksheet.column_dimensions[column_letter].width = adjusted_width
@@ -206,7 +206,7 @@ class ExportManager:
         self,
         data: pd.DataFrame,
         filename: str,
-        formats: list[str] = ["csv", "json", "excel"],
+        formats: list[str] = None,
     ) -> str:
         """
         Create bundle with data in multiple formats.
@@ -219,6 +219,8 @@ class ExportManager:
         Returns:
             Path to bundle archive
         """
+        if formats is None:
+            formats = ["csv", "json", "excel"]
         exported_files = []
 
         for fmt in formats:

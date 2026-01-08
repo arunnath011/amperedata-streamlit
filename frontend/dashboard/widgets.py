@@ -107,7 +107,7 @@ class BaseWidget(ABC):
 
         except Exception as e:
             logger.error(f"Failed to load data for widget {self.widget_id}: {str(e)}")
-            raise DataSourceError(f"Data loading failed: {str(e)}")
+            raise DataSourceError(f"Data loading failed: {str(e)}") from e
 
     def _load_database_data(self, data_source: DataSource) -> pd.DataFrame:
         """Load data from database."""
@@ -207,7 +207,7 @@ class KPIWidget(BaseWidget):
         if self.kpi_config.format and isinstance(self.kpi_config.value, (int, float)):
             try:
                 formatted_value = self.kpi_config.format.format(self.kpi_config.value)
-            except:
+            except Exception:
                 formatted_value = str(self.kpi_config.value)
 
         # Calculate target comparison
@@ -283,7 +283,9 @@ class ChartWidget(BaseWidget):
 
         except Exception as e:
             logger.error(f"Failed to render chart widget {self.widget_id}: {str(e)}")
-            raise RenderingError(f"Chart rendering failed: {str(e)}", widget_id=self.widget_id)
+            raise RenderingError(
+                f"Chart rendering failed: {str(e)}", widget_id=self.widget_id
+            ) from e
 
 
 class TableWidget(BaseWidget):
@@ -458,15 +460,15 @@ class MetricWidget(BaseWidget):
                 go.Scatter(
                     y=self.metric_config.trend_data,
                     mode="lines",
-                    line=dict(color=self.metric_config.color or "#1f77b4", width=2),
+                    line={"color": self.metric_config.color or "#1f77b4", "width": 2},
                     showlegend=False,
                 )
             )
             fig.update_layout(
                 showlegend=False,
-                xaxis=dict(visible=False),
-                yaxis=dict(visible=False),
-                margin=dict(l=0, r=0, t=0, b=0),
+                xaxis={"visible": False},
+                yaxis={"visible": False},
+                margin={"l": 0, "r": 0, "t": 0, "b": 0},
                 height=50,
             )
             trend_sparkline = fig
@@ -554,7 +556,7 @@ class GaugeWidget(BaseWidget):
             )
         )
 
-        fig.update_layout(height=300, margin=dict(l=20, r=20, t=40, b=20))
+        fig.update_layout(height=300, margin={"l": 20, "r": 20, "t": 40, "b": 20})
 
         return {
             "type": "gauge",
@@ -778,7 +780,7 @@ def create_widget(widget_type: WidgetType, widget_id: str, config: WidgetConfig)
         return widget_class(widget_id, config)
     except Exception as e:
         logger.error(f"Failed to create widget {widget_id}: {str(e)}")
-        raise WidgetError(f"Widget creation failed: {str(e)}")
+        raise WidgetError(f"Widget creation failed: {str(e)}") from e
 
 
 # Widget utility functions

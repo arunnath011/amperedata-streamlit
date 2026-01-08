@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -41,7 +41,7 @@ class DataSource(BaseModel):
     file_format: FileFormat = Field(description="Format of the source file")
     file_size_bytes: Optional[int] = Field(None, description="File size in bytes")
     checksum: Optional[str] = Field(None, description="File checksum for integrity")
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+    metadata: dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
 
     @field_validator("file_path")
     @classmethod
@@ -60,13 +60,13 @@ class IngestionRequest(BaseModel):
     experiment_id: Optional[str] = Field(None, description="Associated experiment ID")
     user_id: Optional[str] = Field(None, description="User who initiated the ingestion")
     priority: int = Field(default=5, description="Job priority (1-10, higher = more priority)")
-    parser_config: Dict[str, Any] = Field(
+    parser_config: dict[str, Any] = Field(
         default_factory=dict, description="Parser-specific configuration"
     )
-    validation_config: Dict[str, Any] = Field(
+    validation_config: dict[str, Any] = Field(
         default_factory=dict, description="Validation configuration"
     )
-    transformation_config: Dict[str, Any] = Field(
+    transformation_config: dict[str, Any] = Field(
         default_factory=dict, description="Transformation configuration"
     )
 
@@ -84,14 +84,14 @@ class IngestionResult(BaseModel):
 
     success: bool = Field(description="Whether ingestion was successful")
     records_extracted: int = Field(description="Number of records extracted")
-    columns_detected: List[str] = Field(description="List of detected columns")
-    file_metadata: Dict[str, Any] = Field(
+    columns_detected: list[str] = Field(description="List of detected columns")
+    file_metadata: dict[str, Any] = Field(
         default_factory=dict, description="Extracted file metadata"
     )
     parser_used: str = Field(description="Parser that was used")
     parsing_duration_seconds: float = Field(description="Time taken for parsing")
     data_quality_score: Optional[float] = Field(None, description="Initial data quality score")
-    warnings: List[str] = Field(default_factory=list, description="Non-fatal warnings")
+    warnings: list[str] = Field(default_factory=list, description="Non-fatal warnings")
     error_message: Optional[str] = Field(None, description="Error message if failed")
 
 
@@ -101,7 +101,7 @@ class ValidationRule(BaseModel):
     name: str = Field(description="Name of the validation rule")
     description: str = Field(description="Description of what the rule checks")
     rule_type: str = Field(description="Type of rule (range, format, completeness, etc.)")
-    parameters: Dict[str, Any] = Field(default_factory=dict, description="Rule parameters")
+    parameters: dict[str, Any] = Field(default_factory=dict, description="Rule parameters")
     severity: str = Field(default="error", description="Severity level (error, warning, info)")
     enabled: bool = Field(default=True, description="Whether the rule is enabled")
 
@@ -110,14 +110,14 @@ class ValidationResult(BaseModel):
     """Result of data validation phase."""
 
     success: bool = Field(description="Whether validation passed")
-    rules_applied: List[str] = Field(description="List of validation rules applied")
-    rules_passed: List[str] = Field(description="List of rules that passed")
-    rules_failed: List[str] = Field(description="List of rules that failed")
-    validation_errors: List[str] = Field(
+    rules_applied: list[str] = Field(description="List of validation rules applied")
+    rules_passed: list[str] = Field(description="List of rules that passed")
+    rules_failed: list[str] = Field(description="List of rules that failed")
+    validation_errors: list[str] = Field(
         default_factory=list, description="Validation error messages"
     )
-    validation_warnings: List[str] = Field(default_factory=list, description="Validation warnings")
-    field_errors: Dict[str, List[str]] = Field(
+    validation_warnings: list[str] = Field(default_factory=list, description="Validation warnings")
+    field_errors: dict[str, list[str]] = Field(
         default_factory=dict, description="Field-specific errors"
     )
     records_validated: int = Field(description="Number of records validated")
@@ -130,7 +130,7 @@ class TransformationStep(BaseModel):
 
     name: str = Field(description="Name of the transformation step")
     transformer: str = Field(description="Transformer class/function name")
-    parameters: Dict[str, Any] = Field(
+    parameters: dict[str, Any] = Field(
         default_factory=dict, description="Transformation parameters"
     )
     enabled: bool = Field(default=True, description="Whether the step is enabled")
@@ -141,22 +141,22 @@ class TransformationResult(BaseModel):
     """Result of data transformation phase."""
 
     success: bool = Field(description="Whether transformation was successful")
-    steps_executed: List[str] = Field(description="List of transformation steps executed")
-    steps_succeeded: List[str] = Field(description="List of steps that succeeded")
-    steps_failed: List[str] = Field(description="List of steps that failed")
+    steps_executed: list[str] = Field(description="List of transformation steps executed")
+    steps_succeeded: list[str] = Field(description="List of steps that succeeded")
+    steps_failed: list[str] = Field(description="List of steps that failed")
     records_input: int = Field(description="Number of input records")
     records_output: int = Field(description="Number of output records")
-    columns_added: List[str] = Field(
+    columns_added: list[str] = Field(
         default_factory=list, description="Columns added during transformation"
     )
-    columns_removed: List[str] = Field(
+    columns_removed: list[str] = Field(
         default_factory=list, description="Columns removed during transformation"
     )
-    columns_modified: List[str] = Field(
+    columns_modified: list[str] = Field(
         default_factory=list, description="Columns modified during transformation"
     )
     transformation_duration_seconds: float = Field(description="Time taken for transformation")
-    warnings: List[str] = Field(default_factory=list, description="Transformation warnings")
+    warnings: list[str] = Field(default_factory=list, description="Transformation warnings")
     error_message: Optional[str] = Field(None, description="Error message if failed")
 
 
@@ -166,7 +166,7 @@ class QualityCheck(BaseModel):
     name: str = Field(description="Name of the quality check")
     description: str = Field(description="Description of the quality check")
     check_type: str = Field(description="Type of check (completeness, accuracy, consistency, etc.)")
-    parameters: Dict[str, Any] = Field(default_factory=dict, description="Check parameters")
+    parameters: dict[str, Any] = Field(default_factory=dict, description="Check parameters")
     threshold: Optional[float] = Field(None, description="Pass/fail threshold")
     weight: float = Field(default=1.0, description="Weight in overall quality score")
     enabled: bool = Field(default=True, description="Whether the check is enabled")
@@ -177,13 +177,13 @@ class QualityCheckResult(BaseModel):
 
     success: bool = Field(description="Whether quality checks passed")
     overall_score: float = Field(description="Overall quality score (0-1)")
-    checks_executed: List[str] = Field(description="List of quality checks executed")
-    checks_passed: List[str] = Field(description="List of checks that passed")
-    checks_failed: List[str] = Field(description="List of checks that failed")
-    check_results: Dict[str, Dict[str, Any]] = Field(
+    checks_executed: list[str] = Field(description="List of quality checks executed")
+    checks_passed: list[str] = Field(description="List of checks that passed")
+    checks_failed: list[str] = Field(description="List of checks that failed")
+    check_results: dict[str, dict[str, Any]] = Field(
         default_factory=dict, description="Detailed check results"
     )
-    recommendations: List[str] = Field(
+    recommendations: list[str] = Field(
         default_factory=list, description="Quality improvement recommendations"
     )
     quality_duration_seconds: float = Field(description="Time taken for quality checks")
@@ -217,7 +217,7 @@ class ETLJob(BaseModel):
 
     # Error handling
     error_message: Optional[str] = Field(None, description="Error message if job failed")
-    error_details: Dict[str, Any] = Field(
+    error_details: dict[str, Any] = Field(
         default_factory=dict, description="Detailed error information"
     )
     retry_count: int = Field(default=0, description="Number of retry attempts")
@@ -271,7 +271,7 @@ class ETLMetrics(BaseModel):
     average_quality_score: float = Field(description="Average data quality score")
 
     # Error statistics
-    common_errors: Dict[str, int] = Field(
+    common_errors: dict[str, int] = Field(
         default_factory=dict, description="Common error types and counts"
     )
 
@@ -293,13 +293,13 @@ class PipelineConfig(BaseModel):
     job_timeout_seconds: int = Field(default=3600, description="Job timeout in seconds")
 
     # Validation settings
-    validation_rules: List[ValidationRule] = Field(
+    validation_rules: list[ValidationRule] = Field(
         default_factory=list, description="Validation rules"
     )
     strict_validation: bool = Field(default=False, description="Whether to use strict validation")
 
     # Transformation settings
-    transformation_steps: List[TransformationStep] = Field(
+    transformation_steps: list[TransformationStep] = Field(
         default_factory=list, description="Transformation steps"
     )
     enable_unit_conversion: bool = Field(
@@ -307,7 +307,7 @@ class PipelineConfig(BaseModel):
     )
 
     # Quality check settings
-    quality_checks: List[QualityCheck] = Field(default_factory=list, description="Quality checks")
+    quality_checks: list[QualityCheck] = Field(default_factory=list, description="Quality checks")
     minimum_quality_score: float = Field(
         default=0.8, description="Minimum acceptable quality score"
     )

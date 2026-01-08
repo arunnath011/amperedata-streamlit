@@ -1,6 +1,6 @@
 """Application settings and configuration management."""
 
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 from pydantic import Field, validator
 from pydantic_settings import BaseSettings
@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     # API
     api_v1_str: str = Field(default="/api/v1", alias="API_V1_STR")
-    backend_cors_origins: List[str] = Field(
+    backend_cors_origins: list[str] = Field(
         default=["http://localhost:3000"], alias="BACKEND_CORS_ORIGINS"
     )
 
@@ -52,7 +52,7 @@ class Settings(BaseSettings):
 
     @validator("backend_cors_origins", pre=True)
     @classmethod
-    def assemble_cors_origins(cls, v: Union[str, List[str]]) -> Union[List[str], str]:
+    def assemble_cors_origins(cls, v: Union[str, list[str]]) -> Union[list[str], str]:
         """Parse CORS origins from environment variable."""
         if isinstance(v, str) and not v.startswith("["):
             return [i.strip() for i in v.split(",")]

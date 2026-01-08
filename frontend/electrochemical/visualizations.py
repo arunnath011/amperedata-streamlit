@@ -119,7 +119,7 @@ class ElectrochemicalPlot(ABC):
         if self.config.plot_style == PlotStyle.SCIENTIFIC:
             figure.update_layout(
                 template="plotly_white",
-                font=dict(family="Arial", size=self.config.font_size),
+                font={"family": "Arial", "size": self.config.font_size},
                 showlegend=self.config.show_legend,
                 width=self.config.width,
                 height=self.config.height,
@@ -127,7 +127,7 @@ class ElectrochemicalPlot(ABC):
         elif self.config.plot_style == PlotStyle.PUBLICATION:
             figure.update_layout(
                 template="simple_white",
-                font=dict(family="Times New Roman", size=self.config.font_size),
+                font={"family": "Times New Roman", "size": self.config.font_size},
                 showlegend=self.config.show_legend,
                 width=self.config.width,
                 height=self.config.height,
@@ -137,7 +137,7 @@ class ElectrochemicalPlot(ABC):
         elif self.config.plot_style == PlotStyle.PRESENTATION:
             figure.update_layout(
                 template="plotly_dark",
-                font=dict(family="Arial", size=self.config.font_size + 2),
+                font={"family": "Arial", "size": self.config.font_size + 2},
                 showlegend=self.config.show_legend,
                 width=self.config.width,
                 height=self.config.height,
@@ -238,8 +238,8 @@ class VoltageCapacityPlot(ElectrochemicalPlot):
                         y=voltage[charge_mask],
                         mode="lines+markers",
                         name="Charge",
-                        line=dict(color="red", width=self.config.line_width),
-                        marker=dict(size=self.config.marker_size / 2),
+                        line={"color": "red", "width": self.config.line_width},
+                        marker={"size": self.config.marker_size / 2},
                         hovertemplate="<b>Charge</b><br>Capacity: %{x:.3f} "
                         + self.vc_config.capacity_units
                         + "<br>Voltage: %{y:.3f} V<extra></extra>",
@@ -254,8 +254,8 @@ class VoltageCapacityPlot(ElectrochemicalPlot):
                         y=voltage[discharge_mask],
                         mode="lines+markers",
                         name="Discharge",
-                        line=dict(color="blue", width=self.config.line_width),
-                        marker=dict(size=self.config.marker_size / 2),
+                        line={"color": "blue", "width": self.config.line_width},
+                        marker={"size": self.config.marker_size / 2},
                         hovertemplate="<b>Discharge</b><br>Capacity: %{x:.3f} "
                         + self.vc_config.capacity_units
                         + "<br>Voltage: %{y:.3f} V<extra></extra>",
@@ -288,7 +288,7 @@ class VoltageCapacityPlot(ElectrochemicalPlot):
 
         except Exception as e:
             logger.error(f"Voltage-capacity plot creation failed: {str(e)}")
-            raise PlottingError(f"Plot creation failed: {str(e)}")
+            raise PlottingError(f"Plot creation failed: {str(e)}") from e
 
     def _highlight_plateaus(
         self,
@@ -307,7 +307,7 @@ class VoltageCapacityPlot(ElectrochemicalPlot):
 
             if len(plateau_indices) > 0:
                 # Add plateau regions as filled areas
-                for i, idx in enumerate(plateau_indices):
+                for _i, idx in enumerate(plateau_indices):
                     if idx < len(capacity) - 1:
                         fig.add_shape(
                             type="rect",
@@ -378,8 +378,8 @@ class CycleLifePlot(ElectrochemicalPlot):
                         y=capacity_retention,
                         mode="lines+markers",
                         name="Capacity Retention",
-                        line=dict(color="blue", width=self.config.line_width),
-                        marker=dict(size=self.config.marker_size),
+                        line={"color": "blue", "width": self.config.line_width},
+                        marker={"size": self.config.marker_size},
                         hovertemplate="<b>Cycle %{x}</b><br>Retention: %{y:.1f}%<extra></extra>",
                     )
                 )
@@ -413,7 +413,7 @@ class CycleLifePlot(ElectrochemicalPlot):
 
         except Exception as e:
             logger.error(f"Cycle life plot creation failed: {str(e)}")
-            raise PlottingError(f"Plot creation failed: {str(e)}")
+            raise PlottingError(f"Plot creation failed: {str(e)}") from e
 
     def _extract_discharge_capacity(self, cycle_data: CycleData) -> float:
         """Extract discharge capacity from cycle data."""
@@ -442,7 +442,7 @@ class CycleLifePlot(ElectrochemicalPlot):
                         y=model_y,
                         mode="lines",
                         name="Linear Fit",
-                        line=dict(color="red", dash="dash", width=2),
+                        line={"color": "red", "dash": "dash", "width": 2},
                         hovertemplate="<b>Linear Model</b><br>Cycle %{x}<br>Predicted: %{y:.1f}%<extra></extra>",
                     )
                 )
@@ -533,7 +533,7 @@ class DifferentialPlot(ElectrochemicalPlot):
                         y=dq_dv_data,
                         mode="lines",
                         name="dQ/dV",
-                        line=dict(color="blue", width=self.config.line_width),
+                        line={"color": "blue", "width": self.config.line_width},
                         hovertemplate="<b>dQ/dV</b><br>Voltage: %{x:.3f} V<br>dQ/dV: %{y:.3f} Ah/V<extra></extra>",
                     ),
                     row=1,
@@ -549,7 +549,7 @@ class DifferentialPlot(ElectrochemicalPlot):
                                 y=[peak["intensity"]],
                                 mode="markers",
                                 name="Peak",
-                                marker=dict(color="red", size=10, symbol="diamond"),
+                                marker={"color": "red", "size": 10, "symbol": "diamond"},
                                 showlegend=False,
                                 hovertemplate=f'<b>Peak</b><br>Voltage: {peak["voltage"]:.3f} V<br>Intensity: {peak["intensity"]:.3f}<extra></extra>',
                             ),
@@ -565,7 +565,7 @@ class DifferentialPlot(ElectrochemicalPlot):
                         y=dv_dq_data,
                         mode="lines",
                         name="dV/dQ",
-                        line=dict(color="green", width=self.config.line_width),
+                        line={"color": "green", "width": self.config.line_width},
                         hovertemplate="<b>dV/dQ</b><br>Voltage: %{x:.3f} V<br>dV/dQ: %{y:.3f} V/Ah<extra></extra>",
                     ),
                     row=2,
@@ -591,7 +591,7 @@ class DifferentialPlot(ElectrochemicalPlot):
 
         except Exception as e:
             logger.error(f"Differential plot creation failed: {str(e)}")
-            raise PlottingError(f"Plot creation failed: {str(e)}")
+            raise PlottingError(f"Plot creation failed: {str(e)}") from e
 
 
 class NyquistPlot(ElectrochemicalPlot):
@@ -632,8 +632,8 @@ class NyquistPlot(ElectrochemicalPlot):
                     y=-z_imag,  # Negative imaginary for standard convention
                     mode="lines+markers",
                     name="Nyquist",
-                    line=dict(color="blue", width=self.config.line_width),
-                    marker=dict(size=self.config.marker_size),
+                    line={"color": "blue", "width": self.config.line_width},
+                    marker={"size": self.config.marker_size},
                     text=[f"{f:.2e} Hz" for f in frequency],
                     hovertemplate="<b>Nyquist Plot</b><br>Z' (Real): %{x:.3f} Ω<br>-Z'' (Imag): %{y:.3f} Ω<br>Frequency: %{text}<extra></extra>",
                 )
@@ -696,7 +696,7 @@ class NyquistPlot(ElectrochemicalPlot):
 
         except Exception as e:
             logger.error(f"Nyquist plot creation failed: {str(e)}")
-            raise PlottingError(f"Plot creation failed: {str(e)}")
+            raise PlottingError(f"Plot creation failed: {str(e)}") from e
 
 
 class BodePlot(ElectrochemicalPlot):
@@ -747,8 +747,8 @@ class BodePlot(ElectrochemicalPlot):
                     y=z_magnitude,
                     mode="lines+markers",
                     name="|Z|",
-                    line=dict(color="blue", width=self.config.line_width),
-                    marker=dict(size=self.config.marker_size / 2),
+                    line={"color": "blue", "width": self.config.line_width},
+                    marker={"size": self.config.marker_size / 2},
                     hovertemplate="<b>Magnitude</b><br>Frequency: %{x:.2e} Hz<br>|Z|: %{y:.3f} Ω<extra></extra>",
                 ),
                 row=1,
@@ -762,8 +762,8 @@ class BodePlot(ElectrochemicalPlot):
                     y=phase_angle,
                     mode="lines+markers",
                     name="Phase",
-                    line=dict(color="red", width=self.config.line_width),
-                    marker=dict(size=self.config.marker_size / 2),
+                    line={"color": "red", "width": self.config.line_width},
+                    marker={"size": self.config.marker_size / 2},
                     hovertemplate="<b>Phase</b><br>Frequency: %{x:.2e} Hz<br>Phase: %{y:.1f}°<extra></extra>",
                 ),
                 row=2,
@@ -802,7 +802,7 @@ class BodePlot(ElectrochemicalPlot):
 
         except Exception as e:
             logger.error(f"Bode plot creation failed: {str(e)}")
-            raise PlottingError(f"Plot creation failed: {str(e)}")
+            raise PlottingError(f"Plot creation failed: {str(e)}") from e
 
 
 class VoltageProfilePlot(ElectrochemicalPlot):
@@ -842,7 +842,7 @@ class VoltageProfilePlot(ElectrochemicalPlot):
                     y=voltage,
                     mode="lines",
                     name="Voltage",
-                    line=dict(color="blue", width=self.config.line_width),
+                    line={"color": "blue", "width": self.config.line_width},
                     yaxis="y",
                     hovertemplate="<b>Voltage Profile</b><br>Time: %{x:.2f} h<br>Voltage: %{y:.3f} V<extra></extra>",
                 )
@@ -856,7 +856,7 @@ class VoltageProfilePlot(ElectrochemicalPlot):
                         y=current,
                         mode="lines",
                         name="Current",
-                        line=dict(color="red", width=self.config.line_width, dash="dash"),
+                        line={"color": "red", "width": self.config.line_width, "dash": "dash"},
                         yaxis="y2",
                         hovertemplate="<b>Current</b><br>Time: %{x:.2f} h<br>Current: %{y:.3f} A<extra></extra>",
                     )
@@ -866,8 +866,8 @@ class VoltageProfilePlot(ElectrochemicalPlot):
             fig.update_layout(
                 title=f"Voltage Profile - Cycle {data.cycle_number}",
                 xaxis_title="Time (h)",
-                yaxis=dict(title="Voltage (V)", side="left"),
-                yaxis2=dict(title="Current (A)", side="right", overlaying="y"),
+                yaxis={"title": "Voltage (V)", "side": "left"},
+                yaxis2={"title": "Current (A)", "side": "right", "overlaying": "y"},
                 hovermode="x unified",
             )
 
@@ -879,7 +879,7 @@ class VoltageProfilePlot(ElectrochemicalPlot):
 
         except Exception as e:
             logger.error(f"Voltage profile plot creation failed: {str(e)}")
-            raise PlottingError(f"Plot creation failed: {str(e)}")
+            raise PlottingError(f"Plot creation failed: {str(e)}") from e
 
 
 class RateCapabilityPlot(ElectrochemicalPlot):
@@ -936,8 +936,8 @@ class RateCapabilityPlot(ElectrochemicalPlot):
                         y=y_data,
                         mode="lines+markers",
                         name="Discharge Capacity",
-                        line=dict(color="blue", width=self.config.line_width),
-                        marker=dict(size=self.config.marker_size),
+                        line={"color": "blue", "width": self.config.line_width},
+                        marker={"size": self.config.marker_size},
                         hovertemplate=hover_template,
                     )
                 )
@@ -950,8 +950,8 @@ class RateCapabilityPlot(ElectrochemicalPlot):
                         y=data.efficiency,
                         mode="lines+markers",
                         name="Coulombic Efficiency",
-                        line=dict(color="green", width=self.config.line_width),
-                        marker=dict(size=self.config.marker_size),
+                        line={"color": "green", "width": self.config.line_width},
+                        marker={"size": self.config.marker_size},
                         yaxis="y2",
                         hovertemplate="<b>Efficiency</b><br>C-rate: %{x}<br>Efficiency: %{y:.1f}%<extra></extra>",
                     )
@@ -961,13 +961,15 @@ class RateCapabilityPlot(ElectrochemicalPlot):
             fig.update_layout(
                 title="Rate Capability Analysis",
                 xaxis_title="C-rate",
-                yaxis=dict(title=y_title, side="left"),
+                yaxis={"title": y_title, "side": "left"},
                 hovermode="x unified",
             )
 
             # Add secondary y-axis for efficiency
             if self.rate_config.show_efficiency and data.efficiency:
-                fig.update_layout(yaxis2=dict(title="Efficiency (%)", side="right", overlaying="y"))
+                fig.update_layout(
+                    yaxis2={"title": "Efficiency (%)", "side": "right", "overlaying": "y"}
+                )
 
             # Use log scale for C-rate if requested
             if self.rate_config.log_scale_rate:
@@ -981,7 +983,7 @@ class RateCapabilityPlot(ElectrochemicalPlot):
 
         except Exception as e:
             logger.error(f"Rate capability plot creation failed: {str(e)}")
-            raise PlottingError(f"Plot creation failed: {str(e)}")
+            raise PlottingError(f"Plot creation failed: {str(e)}") from e
 
 
 class CalendarAgingPlot(ElectrochemicalPlot):
@@ -1033,8 +1035,8 @@ class CalendarAgingPlot(ElectrochemicalPlot):
                         y=capacity_retention,
                         mode="lines+markers",
                         name="Capacity Retention",
-                        line=dict(color="blue", width=self.config.line_width),
-                        marker=dict(size=self.config.marker_size),
+                        line={"color": "blue", "width": self.config.line_width},
+                        marker={"size": self.config.marker_size},
                         hovertemplate=f"<b>Aging</b><br>{time_label}: %{{x:.1f}}<br>Retention: %{{y:.1f}}%<extra></extra>",
                     )
                 )
@@ -1047,8 +1049,8 @@ class CalendarAgingPlot(ElectrochemicalPlot):
                         y=data.resistance_increase,
                         mode="lines+markers",
                         name="Resistance Increase",
-                        line=dict(color="red", width=self.config.line_width),
-                        marker=dict(size=self.config.marker_size),
+                        line={"color": "red", "width": self.config.line_width},
+                        marker={"size": self.config.marker_size},
                         yaxis="y2",
                         hovertemplate=f"<b>Resistance</b><br>{time_label}: %{{x:.1f}}<br>Increase: %{{y:.1f}}%<extra></extra>",
                     )
@@ -1085,14 +1087,14 @@ class CalendarAgingPlot(ElectrochemicalPlot):
             fig.update_layout(
                 title=title_text,
                 xaxis_title=time_label,
-                yaxis=dict(title="Capacity Retention (%)", side="left"),
+                yaxis={"title": "Capacity Retention (%)", "side": "left"},
                 hovermode="x unified",
             )
 
             # Add secondary y-axis for resistance
             if self.aging_config.show_resistance and data.resistance_increase:
                 fig.update_layout(
-                    yaxis2=dict(title="Resistance Increase (%)", side="right", overlaying="y")
+                    yaxis2={"title": "Resistance Increase (%)", "side": "right", "overlaying": "y"}
                 )
 
             # Apply styling
@@ -1103,7 +1105,7 @@ class CalendarAgingPlot(ElectrochemicalPlot):
 
         except Exception as e:
             logger.error(f"Calendar aging plot creation failed: {str(e)}")
-            raise PlottingError(f"Plot creation failed: {str(e)}")
+            raise PlottingError(f"Plot creation failed: {str(e)}") from e
 
     def _add_aging_model(
         self,
@@ -1136,7 +1138,7 @@ class CalendarAgingPlot(ElectrochemicalPlot):
                             y=model_y,
                             mode="lines",
                             name="√t Model",
-                            line=dict(color="red", dash="dash", width=2),
+                            line={"color": "red", "dash": "dash", "width": 2},
                             hovertemplate="<b>√t Model</b><br>Time: %{x:.1f}<br>Predicted: %{y:.1f}%<extra></extra>",
                         )
                     )
@@ -1204,7 +1206,7 @@ class BatchComparisonPlot(ElectrochemicalPlot):
 
         except Exception as e:
             logger.error(f"Batch comparison plot creation failed: {str(e)}")
-            raise PlottingError(f"Plot creation failed: {str(e)}")
+            raise PlottingError(f"Plot creation failed: {str(e)}") from e
 
     def _create_capacity_comparison(
         self, fig: Any, data: ComparisonData, dataset_values: dict[str, float]
@@ -1221,7 +1223,7 @@ class BatchComparisonPlot(ElectrochemicalPlot):
                 boxpoints="all",
                 jitter=0.3,
                 pointpos=-1.8,
-                marker=dict(color="blue"),
+                marker={"color": "blue"},
                 hovertemplate="<b>Capacity</b><br>Value: %{y:.3f} Ah<extra></extra>",
             )
         )
@@ -1241,7 +1243,7 @@ class BatchComparisonPlot(ElectrochemicalPlot):
                 x=sample_names,
                 y=cycle_lives,
                 name="Cycle Life",
-                marker=dict(color="green"),
+                marker={"color": "green"},
                 hovertemplate="<b>%{x}</b><br>Cycle Life: %{y:.0f} cycles<extra></extra>",
             )
         )
@@ -1262,7 +1264,7 @@ class BatchComparisonPlot(ElectrochemicalPlot):
                 y=values,
                 mode="markers",
                 name="Samples",
-                marker=dict(size=self.config.marker_size, color="blue"),
+                marker={"size": self.config.marker_size, "color": "blue"},
                 hovertemplate="<b>%{x}</b><br>Value: %{y:.3f}<extra></extra>",
             )
         )
@@ -1343,4 +1345,4 @@ def create_electrochemical_plot(
         return plot_instance
     except Exception as e:
         logger.error(f"Failed to create plot: {str(e)}")
-        raise PlottingError(f"Plot creation failed: {str(e)}")
+        raise PlottingError(f"Plot creation failed: {str(e)}") from e

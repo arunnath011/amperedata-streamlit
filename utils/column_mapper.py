@@ -413,7 +413,7 @@ class ColumnMapper:
                         df[std_col.name] = pd.to_numeric(df[std_col.name], errors="coerce").astype(
                             "Int64"
                         )
-                    except:
+                    except Exception:
                         warnings.append(
                             f"Column '{std_col.name}' should be integer but appears to be {col_data.dtype}"
                         )

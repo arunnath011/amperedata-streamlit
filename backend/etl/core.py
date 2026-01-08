@@ -147,7 +147,7 @@ class ETLPipeline:
             return parsers
 
         except Exception as e:
-            raise ConfigurationError(f"Failed to initialize parsers: {e}")
+            raise ConfigurationError(f"Failed to initialize parsers: {e}") from e
 
     def _initialize_validators(self) -> dict[str, Any]:
         """Initialize data validators based on configuration."""
@@ -171,7 +171,7 @@ class ETLPipeline:
             return validators
 
         except Exception as e:
-            raise ConfigurationError(f"Failed to initialize validators: {e}")
+            raise ConfigurationError(f"Failed to initialize validators: {e}") from e
 
     def _initialize_transformers(self) -> dict[str, Any]:
         """Initialize data transformers based on configuration."""
@@ -195,7 +195,7 @@ class ETLPipeline:
             return transformers
 
         except Exception as e:
-            raise ConfigurationError(f"Failed to initialize transformers: {e}")
+            raise ConfigurationError(f"Failed to initialize transformers: {e}") from e
 
     def detect_file_format(self, file_path: Union[str, Path]) -> FileFormat:
         """Detect file format based on file extension and content.
@@ -267,7 +267,7 @@ class ETLPipeline:
 
         except Exception as e:
             self.logger.error("Failed to submit ETL job", error=str(e))
-            raise ETLError(f"Failed to submit ETL job: {e}")
+            raise ETLError(f"Failed to submit ETL job: {e}") from e
 
     def _create_task_chain(self, job_id: str) -> chain:
         """Create Celery task chain for ETL processing.

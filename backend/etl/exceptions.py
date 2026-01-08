@@ -4,7 +4,7 @@ Custom exception hierarchy for ETL pipeline operations with detailed
 error information and recovery suggestions.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any, Optional
 
 
 class ETLError(Exception):
@@ -14,7 +14,7 @@ class ETLError(Exception):
         self,
         message: str,
         error_code: Optional[str] = None,
-        details: Optional[Dict[str, Any]] = None,
+        details: Optional[dict[str, Any]] = None,
         recoverable: bool = True,
     ):
         """Initialize ETL error.
@@ -31,7 +31,7 @@ class ETLError(Exception):
         self.details = details or {}
         self.recoverable = recoverable
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert exception to dictionary for serialization."""
         return {
             "error_type": self.__class__.__name__,
@@ -76,8 +76,8 @@ class ValidationError(ETLError):
     def __init__(
         self,
         message: str,
-        validation_errors: Optional[List[str]] = None,
-        field_errors: Optional[Dict[str, List[str]]] = None,
+        validation_errors: Optional[list[str]] = None,
+        field_errors: Optional[dict[str, list[str]]] = None,
         **kwargs,
     ):
         """Initialize validation error.
@@ -132,7 +132,7 @@ class QualityCheckError(ETLError):
     def __init__(
         self,
         message: str,
-        failed_checks: Optional[List[str]] = None,
+        failed_checks: Optional[list[str]] = None,
         quality_score: Optional[float] = None,
         **kwargs,
     ):

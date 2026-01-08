@@ -183,7 +183,7 @@ class DashboardTemplateManager:
 
         except Exception as e:
             logger.error(f"Failed to create dashboard from template: {str(e)}")
-            raise TemplateError(f"Dashboard creation failed: {str(e)}")
+            raise TemplateError(f"Dashboard creation failed: {str(e)}") from e
 
     def _apply_template_parameters(
         self,

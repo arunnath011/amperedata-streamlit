@@ -202,7 +202,7 @@ def create_live_chart(df: pd.DataFrame, battery_id: str, metric: str = "voltage"
                 y=battery_data["voltage"],
                 mode="lines",
                 name="Voltage (V)",
-                line=dict(color="#2196F3", width=2),
+                line={"color": "#2196F3", "width": 2},
             )
         )
         fig.update_layout(yaxis_title="Voltage (V)")
@@ -214,7 +214,7 @@ def create_live_chart(df: pd.DataFrame, battery_id: str, metric: str = "voltage"
                 y=battery_data["current"],
                 mode="lines",
                 name="Current (A)",
-                line=dict(color="#4CAF50", width=2),
+                line={"color": "#4CAF50", "width": 2},
             )
         )
         fig.update_layout(yaxis_title="Current (A)")
@@ -226,14 +226,14 @@ def create_live_chart(df: pd.DataFrame, battery_id: str, metric: str = "voltage"
                 y=battery_data["temperature"],
                 mode="lines",
                 name="Temperature (C)",
-                line=dict(color="#FF5722", width=2),
+                line={"color": "#FF5722", "width": 2},
             )
         )
         fig.update_layout(yaxis_title="Temperature (C)")
 
     fig.update_layout(
         height=300,
-        margin=dict(l=50, r=20, t=30, b=50),
+        margin={"l": 50, "r": 20, "t": 30, "b": 50},
         xaxis_title="Time",
         showlegend=False,
         template="plotly_white",
@@ -274,7 +274,7 @@ def create_multi_metric_chart(df: pd.DataFrame, battery_id: str) -> go.Figure:
                 y=battery_data["voltage"],
                 mode="lines",
                 name="Voltage",
-                line=dict(color="#2196F3", width=2),
+                line={"color": "#2196F3", "width": 2},
             ),
             row=1,
             col=1,
@@ -288,7 +288,7 @@ def create_multi_metric_chart(df: pd.DataFrame, battery_id: str) -> go.Figure:
                 y=battery_data["current"],
                 mode="lines",
                 name="Current",
-                line=dict(color="#4CAF50", width=2),
+                line={"color": "#4CAF50", "width": 2},
             ),
             row=2,
             col=1,
@@ -302,7 +302,7 @@ def create_multi_metric_chart(df: pd.DataFrame, battery_id: str) -> go.Figure:
                 y=battery_data["temperature"],
                 mode="lines",
                 name="Temperature",
-                line=dict(color="#FF5722", width=2),
+                line={"color": "#FF5722", "width": 2},
             ),
             row=3,
             col=1,
@@ -310,7 +310,7 @@ def create_multi_metric_chart(df: pd.DataFrame, battery_id: str) -> go.Figure:
 
     fig.update_layout(
         height=500,
-        margin=dict(l=50, r=20, t=40, b=50),
+        margin={"l": 50, "r": 20, "t": 40, "b": 50},
         showlegend=False,
         template="plotly_white",
     )

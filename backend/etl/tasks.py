@@ -7,7 +7,7 @@ file ingestion, validation, transformation, and loading.
 import time
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict
+from typing import Any
 
 import pandas as pd
 import structlog
@@ -60,7 +60,7 @@ class ETLTask(Task):
 
 
 @celery_app.task(base=ETLTask, bind=True, max_retries=3, default_retry_delay=60)
-def ingest_file_task(self, job_id: str) -> Dict[str, Any]:
+def ingest_file_task(self, job_id: str) -> dict[str, Any]:
     """Ingest file and extract data.
 
     Args:
@@ -173,13 +173,13 @@ def ingest_file_task(self, job_id: str) -> Dict[str, Any]:
             and e.recoverable
             and self.request.retries < self.max_retries
         ):
-            raise self.retry(exc=e, countdown=60)
+            raise self.retry(exc=e, countdown=60) from e
 
-        raise IngestionError(f"File ingestion failed: {e}", recoverable=False)
+        raise IngestionError(f"File ingestion failed: {e}", recoverable=False) from e
 
 
 @celery_app.task(base=ETLTask, bind=True, max_retries=3, default_retry_delay=60)
-def validate_data_task(self, job_id: str, ingestion_result: Dict[str, Any]) -> Dict[str, Any]:
+def validate_data_task(self, job_id: str, ingestion_result: dict[str, Any]) -> dict[str, Any]:
     """Validate ingested data.
 
     Args:
@@ -268,13 +268,13 @@ def validate_data_task(self, job_id: str, ingestion_result: Dict[str, Any]) -> D
             and e.recoverable
             and self.request.retries < self.max_retries
         ):
-            raise self.retry(exc=e, countdown=60)
+            raise self.retry(exc=e, countdown=60) from e
 
-        raise ValidationError(f"Data validation failed: {e}", recoverable=False)
+        raise ValidationError(f"Data validation failed: {e}", recoverable=False) from e
 
 
 @celery_app.task(base=ETLTask, bind=True, max_retries=3, default_retry_delay=60)
-def transform_data_task(self, job_id: str, validation_result: Dict[str, Any]) -> Dict[str, Any]:
+def transform_data_task(self, job_id: str, validation_result: dict[str, Any]) -> dict[str, Any]:
     """Transform and normalize data.
 
     Args:
@@ -388,15 +388,15 @@ def transform_data_task(self, job_id: str, validation_result: Dict[str, Any]) ->
             and e.recoverable
             and self.request.retries < self.max_retries
         ):
-            raise self.retry(exc=e, countdown=60)
+            raise self.retry(exc=e, countdown=60) from e
 
-        raise TransformationError(f"Data transformation failed: {e}", recoverable=False)
+        raise TransformationError(f"Data transformation failed: {e}", recoverable=False) from e
 
 
 @celery_app.task(base=ETLTask, bind=True, max_retries=3, default_retry_delay=60)
 def run_quality_checks_task(
-    self, job_id: str, transformation_result: Dict[str, Any]
-) -> Dict[str, Any]:
+    self, job_id: str, transformation_result: dict[str, Any]
+) -> dict[str, Any]:
     """Run data quality checks.
 
     Args:
@@ -475,13 +475,13 @@ def run_quality_checks_task(
             and e.recoverable
             and self.request.retries < self.max_retries
         ):
-            raise self.retry(exc=e, countdown=60)
+            raise self.retry(exc=e, countdown=60) from e
 
-        raise QualityCheckError(f"Quality checks failed: {e}", recoverable=False)
+        raise QualityCheckError(f"Quality checks failed: {e}", recoverable=False) from e
 
 
 @celery_app.task(base=ETLTask, bind=True, max_retries=3, default_retry_delay=60)
-def load_data_task(self, job_id: str, quality_result: Dict[str, Any]) -> Dict[str, Any]:
+def load_data_task(self, job_id: str, quality_result: dict[str, Any]) -> dict[str, Any]:
     """Load processed data to final destination.
 
     Args:
@@ -595,15 +595,15 @@ def load_data_task(self, job_id: str, quality_result: Dict[str, Any]) -> Dict[st
 
         # Retry on recoverable errors
         if isinstance(e, LoadError) and e.recoverable and self.request.retries < self.max_retries:
-            raise self.retry(exc=e, countdown=60)
+            raise self.retry(exc=e, countdown=60) from e
 
-        raise LoadError(f"Data loading failed: {e}", recoverable=False)
+        raise LoadError(f"Data loading failed: {e}", recoverable=False) from e
 
 
 # Helper functions
 
 
-def _get_parser_for_format(file_format: FileFormat, config: Dict[str, Any]) -> Any:
+def _get_parser_for_format(file_format: FileFormat, config: dict[str, Any]) -> Any:
     """Get appropriate parser for file format."""
     if file_format == FileFormat.BIOLOGIC_MPT:
         return BiologicMPTParser(**config.get("biologic", {}))

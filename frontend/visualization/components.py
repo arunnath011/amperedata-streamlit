@@ -65,7 +65,7 @@ class BaseChart(ABC):
 
         except Exception as e:
             logger.error(f"Chart configuration validation failed: {str(e)}")
-            raise ConfigurationError(f"Invalid chart configuration: {str(e)}")
+            raise ConfigurationError(f"Invalid chart configuration: {str(e)}") from e
 
     @abstractmethod
     def _is_chart_type_compatible(self) -> bool:
@@ -111,7 +111,7 @@ class BaseChart(ABC):
                 chart_id=self.config.id,
                 chart_type=self.config.type.value,
                 rendering_stage="render",
-            )
+            ) from e
 
     def _apply_layout(self) -> None:
         """Apply layout configuration to figure."""
@@ -205,8 +205,11 @@ class BaseChart(ABC):
             self.figure.update_scenes(zaxis=z_axis_config)
 
     def _apply_styling(self) -> None:
-        """Apply styling configuration to traces."""
-        # This will be implemented by specific chart types
+        """Apply styling configuration to traces.
+        
+        Override in subclasses for specific styling behavior.
+        """
+        pass  # Default implementation - subclasses may override
 
     def _configure_interactions(self) -> None:
         """Configure chart interactions."""
@@ -327,7 +330,7 @@ class BaseChart(ABC):
 
         except Exception as e:
             logger.error(f"Chart export failed: {str(e)}")
-            raise ChartRenderingError(f"Export failed: {str(e)}", chart_id=self.config.id)
+            raise ChartRenderingError(f"Export failed: {str(e)}", chart_id=self.config.id) from e
 
 
 class LineChart(BaseChart):
@@ -346,18 +349,18 @@ class LineChart(BaseChart):
             y=data.y,
             mode="lines+markers" if style.marker_size > 0 else "lines",
             name=self.config.title or "Line Chart",
-            line=dict(color=style.color, width=style.line_width, dash=style.dash),
-            marker=dict(
-                size=style.marker_size,
-                symbol=style.marker_symbol,
-                color=style.color,
-                opacity=style.opacity,
-            ),
+            line={"color": style.color, "width": style.line_width, "dash": style.dash},
+            marker={
+                "size": style.marker_size,
+                "symbol": style.marker_symbol,
+                "color": style.color,
+                "opacity": style.opacity,
+            },
             text=data.text,
             hovertext=data.hover_text,
             opacity=style.opacity,
-            error_x=dict(array=data.error_x) if data.error_x else None,
-            error_y=dict(array=data.error_y) if data.error_y else None,
+            error_x={"array": data.error_x} if data.error_x else None,
+            error_y={"array": data.error_y} if data.error_y else None,
         )
 
         return trace
@@ -383,19 +386,19 @@ class ScatterPlot(BaseChart):
             y=data.y,
             mode="markers",
             name=self.config.title or "Scatter Plot",
-            marker=dict(
-                size=marker_size,
-                color=marker_color,
-                symbol=style.marker_symbol,
-                opacity=style.opacity,
-                colorscale=style.color_scale.value if style.color_scale else None,
-                showscale=True if data.color else False,
-                line=dict(width=1, color="white"),
-            ),
+            marker={
+                "size": marker_size,
+                "color": marker_color,
+                "symbol": style.marker_symbol,
+                "opacity": style.opacity,
+                "colorscale": style.color_scale.value if style.color_scale else None,
+                "showscale": True if data.color else False,
+                "line": {"width": 1, "color": "white"},
+            },
             text=data.text,
             hovertext=data.hover_text,
-            error_x=dict(array=data.error_x) if data.error_x else None,
-            error_y=dict(array=data.error_y) if data.error_y else None,
+            error_x={"array": data.error_x} if data.error_x else None,
+            error_y={"array": data.error_y} if data.error_y else None,
         )
 
         return trace
@@ -416,15 +419,15 @@ class BarChart(BaseChart):
             x=data.x,
             y=data.y,
             name=self.config.title or "Bar Chart",
-            marker=dict(
-                color=style.color or style.colors,
-                opacity=style.opacity,
-                line=dict(width=1, color="white"),
-            ),
+            marker={
+                "color": style.color or style.colors,
+                "opacity": style.opacity,
+                "line": {"width": 1, "color": "white"},
+            },
             text=data.text,
             hovertext=data.hover_text,
-            error_x=dict(array=data.error_x) if data.error_x else None,
-            error_y=dict(array=data.error_y) if data.error_y else None,
+            error_x={"array": data.error_x} if data.error_x else None,
+            error_y={"array": data.error_y} if data.error_y else None,
         )
 
         return trace
@@ -448,11 +451,11 @@ class HeatmapChart(BaseChart):
                 raise DataFormatError("Heatmap requires z data or color data")
 
             # Convert to matrix format
-            x_unique = sorted(list(set(data.x)))
-            y_unique = sorted(list(set(data.y)))
+            x_unique = sorted(set(data.x))
+            y_unique = sorted(set(data.y))
             z_matrix = np.zeros((len(y_unique), len(x_unique)))
 
-            for i, (x_val, y_val, z_val) in enumerate(zip(data.x, data.y, data.color)):
+            for _i, (x_val, y_val, z_val) in enumerate(zip(data.x, data.y, data.color)):
                 x_idx = x_unique.index(x_val)
                 y_idx = y_unique.index(y_val)
                 z_matrix[y_idx, x_idx] = z_val
@@ -474,7 +477,7 @@ class HeatmapChart(BaseChart):
             hovertext=data.hover_text,
             text=data.text,
             texttemplate="%{text}",
-            textfont=dict(size=10),
+            textfont={"size": 10},
         )
 
         return trace
@@ -494,11 +497,11 @@ class HistogramChart(BaseChart):
         trace = go.Histogram(
             x=data.x,
             name=self.config.title or "Histogram",
-            marker=dict(
-                color=style.color,
-                opacity=style.opacity,
-                line=dict(width=1, color="white"),
-            ),
+            marker={
+                "color": style.color,
+                "opacity": style.opacity,
+                "line": {"width": 1, "color": "white"},
+            },
             nbinsx=self.config.custom_config.get("bins", 30),
             histnorm=self.config.custom_config.get("histnorm", ""),
         )
@@ -523,7 +526,7 @@ class BoxPlot(BaseChart):
                 data.x if len(set(data.x)) < len(data.x) else None
             ),  # Use x for grouping if categorical
             name=self.config.title or "Box Plot",
-            marker=dict(color=style.color, opacity=style.opacity),
+            marker={"color": style.color, "opacity": style.opacity},
             boxpoints=self.config.custom_config.get("boxpoints", "outliers"),
             jitter=self.config.custom_config.get("jitter", 0.3),
             pointpos=self.config.custom_config.get("pointpos", -1.8),
@@ -547,7 +550,7 @@ class ViolinPlot(BaseChart):
             y=data.y,
             x=data.x if len(set(data.x)) < len(data.x) else None,
             name=self.config.title or "Violin Plot",
-            marker=dict(color=style.color, opacity=style.opacity),
+            marker={"color": style.color, "opacity": style.opacity},
             box_visible=self.config.custom_config.get("box_visible", True),
             meanline_visible=self.config.custom_config.get("meanline_visible", True),
             points=self.config.custom_config.get("points", "outliers"),
@@ -575,8 +578,8 @@ class SurfacePlot(BaseChart):
             z_data = data.z
         else:
             # Assume z is flat array, reshape based on x and y
-            x_unique = sorted(list(set(data.x)))
-            y_unique = sorted(list(set(data.y)))
+            x_unique = sorted(set(data.x))
+            y_unique = sorted(set(data.y))
             z_data = np.array(data.z).reshape(len(y_unique), len(x_unique))
 
         trace = go.Surface(
@@ -611,10 +614,10 @@ class ContourPlot(BaseChart):
             z=data.z,
             colorscale=style.color_scale.value if style.color_scale else "viridis",
             showscale=True,
-            contours=dict(
-                showlabels=self.config.custom_config.get("show_labels", True),
-                labelfont=dict(size=10, color="white"),
-            ),
+            contours={
+                "showlabels": self.config.custom_config.get("show_labels", True),
+                "labelfont": {"size": 10, "color": "white"},
+            },
         )
 
         return trace
@@ -709,10 +712,10 @@ class TreemapChart(BaseChart):
             values=data.y,
             parents=treemap_data.get("parents", [""] * len(data.y)),
             textinfo="label+value+percent parent",
-            marker=dict(
-                colorscale=style.color_scale.value if style.color_scale else "viridis",
-                colorbar=dict(thickness=15, len=0.7),
-            ),
+            marker={
+                "colorscale": style.color_scale.value if style.color_scale else "viridis",
+                "colorbar": {"thickness": 15, "len": 0.7},
+            },
         )
 
         return trace
@@ -734,24 +737,24 @@ class SankeyDiagram(BaseChart):
             raise DataFormatError("Sankey diagram requires source, target, and value data")
 
         trace = go.Sankey(
-            node=dict(
-                pad=15,
-                thickness=20,
-                line=dict(color="black", width=0.5),
-                label=sankey_data.get("node_labels", []),
-                color=sankey_data.get(
+            node={
+                "pad": 15,
+                "thickness": 20,
+                "line": {"color": "black", "width": 0.5},
+                "label": sankey_data.get("node_labels", []),
+                "color": sankey_data.get(
                     "node_colors",
                     style.colors or ["blue"] * len(sankey_data.get("node_labels", [])),
                 ),
-            ),
-            link=dict(
-                source=sankey_data["source"],
-                target=sankey_data["target"],
-                value=sankey_data["value"],
-                color=sankey_data.get(
+            },
+            link={
+                "source": sankey_data["source"],
+                "target": sankey_data["target"],
+                "value": sankey_data["value"],
+                "color": sankey_data.get(
                     "link_colors", ["rgba(0,0,255,0.3)"] * len(sankey_data["source"])
                 ),
-            ),
+            },
         )
 
         return trace

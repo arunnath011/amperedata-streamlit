@@ -328,7 +328,7 @@ class WidgetManager:
 
         except Exception as e:
             logger.error(f"Failed to add widget {widget_config.id}: {str(e)}")
-            raise WidgetError(f"Widget creation failed: {str(e)}")
+            raise WidgetError(f"Widget creation failed: {str(e)}") from e
 
     def remove_widget(self, widget_id: str) -> bool:
         """Remove widget from manager.
@@ -398,7 +398,7 @@ class WidgetManager:
 
         except Exception as e:
             logger.error(f"Failed to update widget {widget_id}: {str(e)}")
-            raise WidgetError(f"Widget update failed: {str(e)}")
+            raise WidgetError(f"Widget update failed: {str(e)}") from e
 
     def refresh_widget_data(self, widget_id: str) -> bool:
         """Refresh data for specific widget.
@@ -538,7 +538,7 @@ class DashboardRenderer:
 
         except Exception as e:
             logger.error(f"Failed to render dashboard {config.id}: {str(e)}")
-            raise RenderingError(f"Dashboard rendering failed: {str(e)}")
+            raise RenderingError(f"Dashboard rendering failed: {str(e)}") from e
 
     def render_widget(self, widget: BaseWidget, config: DashboardWidget) -> dict[str, Any]:
         """Render individual widget.

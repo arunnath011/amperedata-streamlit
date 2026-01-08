@@ -6,27 +6,15 @@ configurable rules, quality scoring, and detailed error reporting.
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
 import structlog
-from pydantic import BaseModel
 
 from .models import QualityCheck, QualityCheckResult, ValidationResult, ValidationRule
 
 logger = structlog.get_logger(__name__)
-
-
-class ValidationRule(BaseModel):
-    """Data validation rule configuration."""
-
-    name: str
-    description: str
-    rule_type: str  # range, format, completeness, consistency, etc.
-    parameters: Dict[str, Any] = {}
-    severity: str = "error"  # error, warning, info
-    enabled: bool = True
 
 
 class BaseValidator(ABC):
@@ -56,12 +44,12 @@ class BaseValidator(ABC):
     def _create_validation_result(
         self,
         success: bool,
-        rules_applied: List[str],
-        rules_passed: List[str],
-        rules_failed: List[str],
-        errors: List[str],
-        warnings: List[str],
-        field_errors: Dict[str, List[str]],
+        rules_applied: list[str],
+        rules_passed: list[str],
+        rules_failed: list[str],
+        errors: list[str],
+        warnings: list[str],
+        field_errors: dict[str, list[str]],
         records_validated: int,
         records_passed: int,
         duration: float,
@@ -87,7 +75,7 @@ class DataValidator(BaseValidator):
     def __init__(
         self,
         strict_mode: bool = False,
-        custom_rules: Optional[List[ValidationRule]] = None,
+        custom_rules: Optional[list[ValidationRule]] = None,
     ):
         """Initialize data validator.
 
@@ -99,7 +87,7 @@ class DataValidator(BaseValidator):
         self.custom_rules = custom_rules or []
         self.default_rules = self._create_default_rules()
 
-    def _create_default_rules(self) -> List[ValidationRule]:
+    def _create_default_rules(self) -> list[ValidationRule]:
         """Create default validation rules."""
         return [
             ValidationRule(
@@ -217,7 +205,7 @@ class DataValidator(BaseValidator):
 
     def _apply_rule(
         self, data: pd.DataFrame, rule: ValidationRule
-    ) -> Tuple[bool, List[str], Dict[str, List[str]]]:
+    ) -> tuple[bool, list[str], dict[str, list[str]]]:
         """Apply a single validation rule.
 
         Args:
@@ -240,7 +228,7 @@ class DataValidator(BaseValidator):
 
     def _apply_completeness_rule(
         self, data: pd.DataFrame, rule: ValidationRule
-    ) -> Tuple[bool, List[str], Dict[str, List[str]]]:
+    ) -> tuple[bool, list[str], dict[str, list[str]]]:
         """Apply completeness validation rules."""
         if rule.name == "no_empty_dataframe":
             if data.empty:
@@ -262,7 +250,7 @@ class DataValidator(BaseValidator):
 
     def _apply_format_rule(
         self, data: pd.DataFrame, rule: ValidationRule
-    ) -> Tuple[bool, List[str], Dict[str, List[str]]]:
+    ) -> tuple[bool, list[str], dict[str, list[str]]]:
         """Apply format validation rules."""
         if rule.name == "numeric_columns_finite":
             numeric_cols = data.select_dtypes(include=[np.number]).columns
@@ -294,7 +282,7 @@ class DataValidator(BaseValidator):
 
     def _apply_range_rule(
         self, data: pd.DataFrame, rule: ValidationRule
-    ) -> Tuple[bool, List[str], Dict[str, List[str]]]:
+    ) -> tuple[bool, list[str], dict[str, list[str]]]:
         """Apply range validation rules."""
         column = rule.parameters.get("column")
         min_val = rule.parameters.get("min_value")
@@ -326,7 +314,7 @@ class DataValidator(BaseValidator):
 
     def _apply_consistency_rule(
         self, data: pd.DataFrame, rule: ValidationRule
-    ) -> Tuple[bool, List[str], Dict[str, List[str]]]:
+    ) -> tuple[bool, list[str], dict[str, list[str]]]:
         """Apply consistency validation rules."""
         # Placeholder for consistency rules (e.g., time series monotonicity)
         return True, [], {}
@@ -340,7 +328,7 @@ class BatteryDataValidator(DataValidator):
         super().__init__(strict_mode)
         self.battery_rules = self._create_battery_rules()
 
-    def _create_battery_rules(self) -> List[ValidationRule]:
+    def _create_battery_rules(self) -> list[ValidationRule]:
         """Create battery-specific validation rules."""
         return [
             # Voltage validation
@@ -445,7 +433,7 @@ class BatteryDataValidator(DataValidator):
 
         return result
 
-    def _check_cycle_consistency(self, data: pd.DataFrame) -> List[int]:
+    def _check_cycle_consistency(self, data: pd.DataFrame) -> list[int]:
         """Check for gaps in cycle indexing."""
         if "cycle_index" not in data.columns:
             return []
@@ -460,7 +448,7 @@ class BatteryDataValidator(DataValidator):
 
         return gaps
 
-    def _check_energy_balance(self, data: pd.DataFrame) -> List[str]:
+    def _check_energy_balance(self, data: pd.DataFrame) -> list[str]:
         """Check energy balance consistency."""
         issues = []
 
@@ -481,7 +469,7 @@ class BatteryDataValidator(DataValidator):
 class QualityChecker:
     """Data quality assessment and scoring system."""
 
-    def __init__(self, custom_checks: Optional[List[QualityCheck]] = None):
+    def __init__(self, custom_checks: Optional[list[QualityCheck]] = None):
         """Initialize quality checker.
 
         Args:
@@ -491,7 +479,7 @@ class QualityChecker:
         self.default_checks = self._create_default_checks()
         self.logger = logger.bind(component="quality_checker")
 
-    def _create_default_checks(self) -> List[QualityCheck]:
+    def _create_default_checks(self) -> list[QualityCheck]:
         """Create default quality checks."""
         return [
             QualityCheck(
@@ -614,7 +602,7 @@ class QualityChecker:
         data: pd.DataFrame,
         check: QualityCheck,
         validation_result: ValidationResult,
-    ) -> Tuple[float, Dict[str, Any], List[str]]:
+    ) -> tuple[float, dict[str, Any], list[str]]:
         """Run a single quality check.
 
         Args:
@@ -638,7 +626,7 @@ class QualityChecker:
 
     def _check_completeness(
         self, data: pd.DataFrame, check: QualityCheck
-    ) -> Tuple[float, Dict[str, Any], List[str]]:
+    ) -> tuple[float, dict[str, Any], list[str]]:
         """Check data completeness."""
         if data.empty:
             return 0.0, {"reason": "Empty dataset"}, ["Provide non-empty dataset"]
@@ -664,7 +652,7 @@ class QualityChecker:
         data: pd.DataFrame,
         check: QualityCheck,
         validation_result: ValidationResult,
-    ) -> Tuple[float, Dict[str, Any], List[str]]:
+    ) -> tuple[float, dict[str, Any], list[str]]:
         """Check data consistency."""
         # Base consistency on validation results
         total_rules = len(validation_result.rules_applied)
@@ -690,7 +678,7 @@ class QualityChecker:
         data: pd.DataFrame,
         check: QualityCheck,
         validation_result: ValidationResult,
-    ) -> Tuple[float, Dict[str, Any], List[str]]:
+    ) -> tuple[float, dict[str, Any], list[str]]:
         """Check data accuracy."""
         # Simple accuracy check based on outliers and range violations
         numeric_cols = data.select_dtypes(include=[np.number]).columns
@@ -734,7 +722,7 @@ class QualityChecker:
 
     def _check_timeliness(
         self, data: pd.DataFrame, check: QualityCheck
-    ) -> Tuple[float, Dict[str, Any], List[str]]:
+    ) -> tuple[float, dict[str, Any], list[str]]:
         """Check data timeliness."""
         # Look for time-related columns
         time_cols = []

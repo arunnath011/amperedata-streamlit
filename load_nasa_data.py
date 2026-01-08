@@ -199,7 +199,7 @@ def load_nasa_data(data_dir: Path, db_path: Path):
 
             # Insert capacity fade data
             cycle_num = 0
-            for idx, row in discharge_records.iterrows():
+            for _idx, row in discharge_records.iterrows():
                 if pd.notna(row.get("Capacity")):
                     retention = (
                         (row["Capacity"] / initial_capacity * 100) if initial_capacity else None
@@ -223,7 +223,7 @@ def load_nasa_data(data_dir: Path, db_path: Path):
         impedance_records = battery_meta[battery_meta["type"] == "impedance"]
 
         if not impedance_records.empty:
-            for idx, row in impedance_records.iterrows():
+            for _idx, row in impedance_records.iterrows():
                 if pd.notna(row.get("Re")) or pd.notna(row.get("Rct")):
                     cursor.execute(
                         """
@@ -244,7 +244,7 @@ def load_nasa_data(data_dir: Path, db_path: Path):
         cycle_count = 0
         max_cycles = 100  # Limit cycles to keep database manageable
 
-        for idx, row in tqdm(
+        for _idx, row in tqdm(
             battery_meta.iterrows(), total=len(battery_meta), desc=f"  {battery_id}"
         ):
             if cycle_count >= max_cycles:

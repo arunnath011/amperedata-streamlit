@@ -140,7 +140,7 @@ class DashboardStorage:
                 return self._save_to_file(config)
         except Exception as e:
             logger.error(f"Failed to save dashboard {config.id}: {str(e)}")
-            raise StorageError(f"Save operation failed: {str(e)}")
+            raise StorageError(f"Save operation failed: {str(e)}") from e
 
     async def load_dashboard(self, dashboard_id: str) -> Optional[DashboardConfig]:
         """Load dashboard configuration.
@@ -161,7 +161,7 @@ class DashboardStorage:
                 return self._load_from_file(dashboard_id)
         except Exception as e:
             logger.error(f"Failed to load dashboard {dashboard_id}: {str(e)}")
-            raise StorageError(f"Load operation failed: {str(e)}")
+            raise StorageError(f"Load operation failed: {str(e)}") from e
 
     async def delete_dashboard(self, dashboard_id: str) -> bool:
         """Delete dashboard (soft delete).
@@ -428,7 +428,7 @@ class VersionManager:
 
         except Exception as e:
             logger.error(f"Failed to create version: {str(e)}")
-            raise VersionError(f"Version creation failed: {str(e)}")
+            raise VersionError(f"Version creation failed: {str(e)}") from e
 
     async def get_versions(self, dashboard_id: str) -> list[DashboardVersion]:
         """Get all versions for dashboard.
@@ -689,7 +689,7 @@ class SnapshotManager:
 
         except Exception as e:
             logger.error(f"Failed to create snapshot: {str(e)}")
-            raise ExportError(f"Snapshot creation failed: {str(e)}")
+            raise ExportError(f"Snapshot creation failed: {str(e)}") from e
 
     async def schedule_snapshots(self, dashboard_id: str, schedule_config: ScheduleConfig) -> bool:
         """Schedule automatic snapshots.

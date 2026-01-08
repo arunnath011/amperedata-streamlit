@@ -18,7 +18,7 @@ Supported formats:
 import csv
 import re
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import chardet
 import pandas as pd
@@ -59,7 +59,7 @@ class ColumnMapping(BaseModel):
     )
     unit: Optional[str] = Field(None, description="Physical unit (V, A, Ah, etc.)")
     required: bool = Field(default=False, description="Whether this column is required")
-    validation_range: Optional[Tuple[float, float]] = Field(
+    validation_range: Optional[tuple[float, float]] = Field(
         None, description="Valid range for numeric data"
     )
     default_value: Optional[Any] = Field(None, description="Default value if missing")
@@ -79,7 +79,7 @@ class ParsingTemplate(BaseModel):
 
     name: str = Field(description="Template name")
     description: Optional[str] = Field(None, description="Template description")
-    file_patterns: List[str] = Field(description="File name patterns this template applies to")
+    file_patterns: list[str] = Field(description="File name patterns this template applies to")
 
     # File format settings
     delimiter: Optional[str] = Field(None, description="Column delimiter (auto-detect if None)")
@@ -87,10 +87,10 @@ class ParsingTemplate(BaseModel):
     header_row: Optional[int] = Field(0, description="Row index containing headers (0-based)")
     units_row: Optional[int] = Field(None, description="Row index containing units")
     data_start_row: Optional[int] = Field(None, description="Row index where data starts")
-    skip_rows: List[int] = Field(default_factory=list, description="Row indices to skip")
+    skip_rows: list[int] = Field(default_factory=list, description="Row indices to skip")
 
     # Column configuration
-    column_mappings: List[ColumnMapping] = Field(description="Column mapping configurations")
+    column_mappings: list[ColumnMapping] = Field(description="Column mapping configurations")
     case_sensitive: bool = Field(default=False, description="Case sensitive column matching")
 
     # Data validation
@@ -98,11 +98,11 @@ class ParsingTemplate(BaseModel):
     max_rows: Optional[int] = Field(None, description="Maximum number of data rows allowed")
 
     # Metadata extraction
-    metadata_patterns: Dict[str, str] = Field(
+    metadata_patterns: dict[str, str] = Field(
         default_factory=dict, description="Regex patterns to extract metadata from file"
     )
 
-    def get_column_mapping_dict(self, case_sensitive: bool = None) -> Dict[str, ColumnMapping]:
+    def get_column_mapping_dict(self, case_sensitive: bool = None) -> dict[str, ColumnMapping]:
         """Get column mappings as a dictionary for lookup."""
         if case_sensitive is None:
             case_sensitive = self.case_sensitive
@@ -118,8 +118,8 @@ class ParsedCSVData(BaseModel):
 
     # Core data
     data: pd.DataFrame = Field(description="Parsed and validated data")
-    original_columns: List[str] = Field(description="Original column names from file")
-    mapped_columns: List[str] = Field(description="Standardized column names")
+    original_columns: list[str] = Field(description="Original column names from file")
+    mapped_columns: list[str] = Field(description="Standardized column names")
 
     # File information
     file_path: Optional[str] = Field(None, description="Source file path")
@@ -133,11 +133,11 @@ class ParsedCSVData(BaseModel):
     skipped_rows: int = Field(default=0, description="Number of rows skipped")
 
     # Extracted metadata
-    metadata: Dict[str, Any] = Field(default_factory=dict, description="Extracted file metadata")
-    units: Dict[str, str] = Field(default_factory=dict, description="Column units")
+    metadata: dict[str, Any] = Field(default_factory=dict, description="Extracted file metadata")
+    units: dict[str, str] = Field(default_factory=dict, description="Column units")
 
     # Validation results
-    validation_errors: List[str] = Field(default_factory=list, description="Data validation errors")
+    validation_errors: list[str] = Field(default_factory=list, description="Data validation errors")
     data_quality_score: float = Field(default=1.0, description="Data quality score (0-1)")
 
     class Config:
@@ -166,7 +166,7 @@ class GenericCSVParser:
         self.logger = logger.bind(parser="generic_csv")
 
         # Load templates
-        self.templates: Dict[str, ParsingTemplate] = {}
+        self.templates: dict[str, ParsingTemplate] = {}
         self._load_templates()
 
         # Common delimiters for auto-detection
@@ -338,7 +338,7 @@ class GenericCSVParser:
         )
         self.templates["generic_battery"] = generic_template
 
-    def _create_default_mappings(self) -> Dict[str, str]:
+    def _create_default_mappings(self) -> dict[str, str]:
         """Create default column name mappings for common variations."""
         return {
             # Time variations
@@ -646,7 +646,7 @@ class GenericCSVParser:
 
     def _apply_template(
         self, df: pd.DataFrame, template: ParsingTemplate, file_path: Path
-    ) -> Tuple[pd.DataFrame, Dict[str, Any], Dict[str, str]]:
+    ) -> tuple[pd.DataFrame, dict[str, Any], dict[str, str]]:
         """Apply template mappings and validation."""
         df.columns.tolist()
         column_mapping = template.get_column_mapping_dict()
@@ -668,7 +668,7 @@ class GenericCSVParser:
         required_mappings = {m.source_name: m for m in template.column_mappings if m.required}
         missing_required = []
 
-        for req_col, mapping in required_mappings.items():
+        for req_col, _mapping in required_mappings.items():
             col_key = req_col if template.case_sensitive else req_col.lower()
             found = any(
                 (c if template.case_sensitive else c.lower()) == col_key for c in df.columns
@@ -701,7 +701,7 @@ class GenericCSVParser:
 
     def _apply_generic_mapping(
         self, df: pd.DataFrame, file_path: Path
-    ) -> Tuple[pd.DataFrame, Dict[str, Any], Dict[str, str]]:
+    ) -> tuple[pd.DataFrame, dict[str, Any], dict[str, str]]:
         """Apply generic column mappings when no template matches."""
         rename_mapping = {}
         units = {}
@@ -770,7 +770,7 @@ class GenericCSVParser:
 
         return df
 
-    def _extract_metadata(self, file_path: Path, template: ParsingTemplate) -> Dict[str, Any]:
+    def _extract_metadata(self, file_path: Path, template: ParsingTemplate) -> dict[str, Any]:
         """Extract metadata using template patterns."""
         metadata = {"file_path": str(file_path)}
 
@@ -790,7 +790,7 @@ class GenericCSVParser:
 
         return metadata
 
-    def _validate_data(self, df: pd.DataFrame, template: Optional[ParsingTemplate]) -> List[str]:
+    def _validate_data(self, df: pd.DataFrame, template: Optional[ParsingTemplate]) -> list[str]:
         """Validate parsed data against template requirements."""
         errors = []
 
@@ -823,7 +823,7 @@ class GenericCSVParser:
 
         return errors
 
-    def _calculate_quality_score(self, df: pd.DataFrame, validation_errors: List[str]) -> float:
+    def _calculate_quality_score(self, df: pd.DataFrame, validation_errors: list[str]) -> float:
         """Calculate data quality score (0-1)."""
         if len(validation_errors) > 0:
             # Deduct points for validation errors
@@ -902,7 +902,7 @@ class GenericCSVParser:
 
         self.logger.info(f"Saved template '{template.name}' to {file_path}")
 
-    def list_templates(self) -> List[str]:
+    def list_templates(self) -> list[str]:
         """List available template names."""
         return list(self.templates.keys())
 

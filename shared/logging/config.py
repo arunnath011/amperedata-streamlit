@@ -2,7 +2,7 @@
 
 import logging
 import sys
-from typing import Any, Dict, Optional
+from typing import Any, Optional
 
 import structlog
 from structlog.types import FilteringBoundLogger
@@ -131,7 +131,7 @@ def add_request_context(
     request_id: Optional[str] = None,
     user_id: Optional[str] = None,
     **kwargs: Any,
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Add request context to log messages.
 
     Args:
@@ -156,7 +156,7 @@ def add_request_context(
 def log_function_call(
     func_name: str,
     args: tuple = (),
-    kwargs: Optional[Dict[str, Any]] = None,
+    kwargs: Optional[dict[str, Any]] = None,
     logger: Optional[FilteringBoundLogger] = None,
 ) -> None:
     """Log function call details.

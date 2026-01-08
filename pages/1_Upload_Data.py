@@ -614,7 +614,7 @@ elif st.session_state.mapping_step == "mapping":
     # Display mapping UI by category
     tabs = st.tabs([cat.title() for cat in categories.keys()])
 
-    for tab, (category, cols) in zip(tabs, categories.items()):
+    for tab, (_category, cols) in zip(tabs, categories.items()):
         with tab:
             for std_col in cols:
                 col1, col2, col3, col4 = st.columns([1, 2, 2, 1])
@@ -901,7 +901,7 @@ elif st.session_state.mapping_step == "complete":
 # Sidebar: Upload History
 st.sidebar.markdown("### Upload History")
 if st.session_state.upload_history:
-    for i, item in enumerate(reversed(st.session_state.upload_history[-5:])):
+    for _i, item in enumerate(reversed(st.session_state.upload_history[-5:])):
         with st.sidebar.expander(f"{item['file_name']}", expanded=False):
             st.caption(f"**Battery ID:** {item['battery_id']}")
             st.caption(f"**Time:** {item['timestamp'][:19]}")

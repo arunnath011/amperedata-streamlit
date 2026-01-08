@@ -8,7 +8,7 @@ Handles data loading, feature engineering, model training, and evaluation.
 
 import sqlite3
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 import joblib
 import numpy as np
@@ -67,7 +67,7 @@ class RULTrainingPipeline:
         self.feature_names = None
 
     def load_battery_data_from_db(
-        self, db_path: str, battery_ids: Optional[List[str]] = None
+        self, db_path: str, battery_ids: Optional[list[str]] = None
     ) -> pd.DataFrame:
         """
         Load battery data from SQLite database.
@@ -157,7 +157,7 @@ class RULTrainingPipeline:
 
     def prepare_training_data(
         self, features_df: pd.DataFrame, scale_features: bool = True
-    ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
+    ) -> tuple[pd.DataFrame, pd.DataFrame, pd.Series, pd.Series]:
         """
         Prepare data for training (split and scale).
 
@@ -206,9 +206,9 @@ class RULTrainingPipeline:
 
     def train_model(
         self,
-        hyperparameters: Optional[Dict[str, Any]] = None,
+        hyperparameters: Optional[dict[str, Any]] = None,
         early_stopping: bool = True,
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """
         Train the model.
 
@@ -239,14 +239,14 @@ class RULTrainingPipeline:
         # Evaluate
         metrics = self.evaluate_model()
 
-        print(f"\n✅ Training complete!")
+        print("\n✅ Training complete!")
         print(f"   MAE: {metrics['test_mae']:.2f} cycles")
         print(f"   RMSE: {metrics['test_rmse']:.2f} cycles")
         print(f"   R²: {metrics['test_r2']:.4f}")
 
         return metrics
 
-    def evaluate_model(self) -> Dict[str, float]:
+    def evaluate_model(self) -> dict[str, float]:
         """
         Evaluate model performance.
 
@@ -284,9 +284,9 @@ class RULTrainingPipeline:
     def train_from_database(
         self,
         db_path: str,
-        battery_ids: Optional[List[str]] = None,
-        hyperparameters: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, float]:
+        battery_ids: Optional[list[str]] = None,
+        hyperparameters: Optional[dict[str, Any]] = None,
+    ) -> dict[str, float]:
         """
         Complete training pipeline from database.
 

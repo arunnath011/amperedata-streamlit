@@ -306,7 +306,7 @@ class TestDashboardBuilder:
     def test_widget_addition(self):
         """Test adding widgets to dashboard."""
         # Create dashboard
-        config = self.builder.create_dashboard(name="Test Dashboard", created_by="test_user")
+        self.builder.create_dashboard(name="Test Dashboard", created_by="test_user")
 
         # Add KPI widget
         kpi_config = KPIConfig(title="Test KPI", value=100, unit="count")
@@ -331,7 +331,7 @@ class TestDashboardBuilder:
 
         # Add first widget
         kpi_config = KPIConfig(title="KPI 1", value=100)
-        widget1_id = self.builder.add_widget(
+        self.builder.add_widget(
             widget_type=WidgetType.KPI,
             config=kpi_config,
             position=WidgetPosition(x=0, y=0, width=4, height=3),
@@ -492,7 +492,7 @@ class TestDashboardStorage:
 
     def test_dashboard_save_and_load(self):
         """Test dashboard save and load operations with mocks (Pydantic V2 serialization issues)."""
-        from unittest.mock import MagicMock, patch
+        from unittest.mock import patch
 
         # Create test dashboard
         layout = DashboardLayout(type=LayoutType.GRID)

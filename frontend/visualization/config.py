@@ -77,7 +77,7 @@ class ChartConfigManager:
 
         except Exception as e:
             logger.error(f"Failed to create chart configuration: {str(e)}")
-            raise ConfigurationError(f"Configuration creation failed: {str(e)}")
+            raise ConfigurationError(f"Configuration creation failed: {str(e)}") from e
 
     def get_config(self, config_id: str) -> Optional[ChartConfig]:
         """Get chart configuration by ID.
@@ -117,7 +117,7 @@ class ChartConfigManager:
 
         except Exception as e:
             logger.error(f"Failed to update configuration: {str(e)}")
-            raise ConfigurationError(f"Configuration update failed: {str(e)}")
+            raise ConfigurationError(f"Configuration update failed: {str(e)}") from e
 
     def delete_config(self, config_id: str) -> bool:
         """Delete chart configuration.
@@ -166,7 +166,7 @@ class ChartConfigManager:
 
         except Exception as e:
             logger.error(f"Failed to save configuration: {str(e)}")
-            raise ConfigurationError(f"Configuration save failed: {str(e)}")
+            raise ConfigurationError(f"Configuration save failed: {str(e)}") from e
 
     def load_config(self, file_path: Union[str, Path]) -> ChartConfig:
         """Load chart configuration from file.
@@ -189,7 +189,7 @@ class ChartConfigManager:
 
         except Exception as e:
             logger.error(f"Failed to load configuration: {str(e)}")
-            raise ConfigurationError(f"Configuration load failed: {str(e)}")
+            raise ConfigurationError(f"Configuration load failed: {str(e)}") from e
 
 
 class ThemeManager:
@@ -343,7 +343,7 @@ class ThemeManager:
 
         except Exception as e:
             logger.error(f"Failed to create theme: {str(e)}")
-            raise ThemeError(f"Theme creation failed: {str(e)}")
+            raise ThemeError(f"Theme creation failed: {str(e)}") from e
 
     def apply_theme_to_config(self, config: ChartConfig, theme: VisualizationTheme) -> ChartConfig:
         """Apply theme to chart configuration.
@@ -387,7 +387,7 @@ class ThemeManager:
 
         except Exception as e:
             logger.error(f"Failed to apply theme: {str(e)}")
-            raise ThemeError(f"Theme application failed: {str(e)}")
+            raise ThemeError(f"Theme application failed: {str(e)}") from e
 
     def list_themes(self) -> list[VisualizationTheme]:
         """List all available themes.
@@ -561,7 +561,7 @@ class TemplateManager:
 
         except Exception as e:
             logger.error(f"Failed to create template: {str(e)}")
-            raise TemplateError(f"Template creation failed: {str(e)}")
+            raise TemplateError(f"Template creation failed: {str(e)}") from e
 
     def apply_template_to_config(
         self, template: ChartTemplate, parameters: Optional[dict[str, Any]] = None
@@ -611,7 +611,7 @@ class TemplateManager:
 
         except Exception as e:
             logger.error(f"Failed to apply template: {str(e)}")
-            raise TemplateError(f"Template application failed: {str(e)}")
+            raise TemplateError(f"Template application failed: {str(e)}") from e
 
     def _apply_parameter(
         self,

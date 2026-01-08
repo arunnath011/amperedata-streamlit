@@ -22,7 +22,7 @@ import re
 import warnings
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import pandas as pd
 import structlog
@@ -71,21 +71,21 @@ class BiologicMetadata(BaseModel):
     temperature: Optional[float] = Field(None, description="Temperature in Celsius")
 
     # Measurement parameters
-    voltage_range: Optional[Tuple[float, float]] = Field(
+    voltage_range: Optional[tuple[float, float]] = Field(
         None, description="Voltage range (min, max) in V"
     )
     current_range: Optional[float] = Field(None, description="Current range in A")
     scan_rate: Optional[float] = Field(None, description="Scan rate in V/s for CV")
-    frequency_range: Optional[Tuple[float, float]] = Field(
+    frequency_range: Optional[tuple[float, float]] = Field(
         None, description="Frequency range for EIS"
     )
 
     # Raw header data
-    raw_header: Dict[str, Any] = Field(
+    raw_header: dict[str, Any] = Field(
         default_factory=dict, description="Raw header key-value pairs"
     )
-    column_names: List[str] = Field(default_factory=list, description="Data column names")
-    column_units: List[str] = Field(default_factory=list, description="Data column units")
+    column_names: list[str] = Field(default_factory=list, description="Data column names")
+    column_units: list[str] = Field(default_factory=list, description="Data column units")
 
     @field_validator("acquisition_date", mode="before")
     @classmethod
@@ -117,26 +117,26 @@ class BiologicData(BaseModel):
     """Parsed data from BioLogic .mpt file."""
 
     # Required columns based on your specifications
-    cycle_number: List[int] = Field(description="Cycle index")
-    half_cycle: List[int] = Field(description="Half cycle index")
-    voltage_v: List[float] = Field(description="Cell potential in Volts")
-    current_ma: List[float] = Field(description="Cell current in mA")
+    cycle_number: list[int] = Field(description="Cycle index")
+    half_cycle: list[int] = Field(description="Half cycle index")
+    voltage_v: list[float] = Field(description="Cell potential in Volts")
+    current_ma: list[float] = Field(description="Cell current in mA")
 
     # Capacity and energy data
-    q_discharge_mah: List[float] = Field(description="Discharge capacity in mAh")
-    q_charge_mah: List[float] = Field(description="Charge capacity in mAh")
-    energy_charge_wh: List[float] = Field(description="Charge energy in Wh")
-    energy_discharge_wh: List[float] = Field(description="Discharge energy in Wh")
+    q_discharge_mah: list[float] = Field(description="Discharge capacity in mAh")
+    q_charge_mah: list[float] = Field(description="Charge capacity in mAh")
+    energy_charge_wh: list[float] = Field(description="Charge energy in Wh")
+    energy_discharge_wh: list[float] = Field(description="Discharge energy in Wh")
 
     # Time data
-    time_s: Optional[List[float]] = Field(None, description="Time in seconds")
+    time_s: Optional[list[float]] = Field(None, description="Time in seconds")
 
     # Additional common columns
-    step_number: Optional[List[int]] = Field(None, description="Step number in protocol")
-    temperature_c: Optional[List[float]] = Field(None, description="Temperature in Celsius")
+    step_number: Optional[list[int]] = Field(None, description="Step number in protocol")
+    temperature_c: Optional[list[float]] = Field(None, description="Temperature in Celsius")
 
     # Raw data for additional columns
-    additional_data: Dict[str, List[Any]] = Field(
+    additional_data: dict[str, list[Any]] = Field(
         default_factory=dict, description="Additional columns"
     )
 
@@ -218,7 +218,7 @@ class BiologicMPTParser:
             "counter inc.": "counter_inc",
         }
 
-    def parse_file(self, file_path: Union[str, Path]) -> Tuple[BiologicData, BiologicMetadata]:
+    def parse_file(self, file_path: Union[str, Path]) -> tuple[BiologicData, BiologicMetadata]:
         """Parse a BioLogic .mpt file.
 
         Args:
@@ -238,7 +238,7 @@ class BiologicMPTParser:
             raise BiologicFileNotFoundError(f"File not found: {file_path}")
 
         if not file_path.suffix.lower() == ".mpt":
-            warnings.warn(f"File does not have .mpt extension: {file_path}")
+            warnings.warn(f"File does not have .mpt extension: {file_path}", stacklevel=2)
 
         self.logger.info("Parsing BioLogic .mpt file", file_path=str(file_path))
 
@@ -310,13 +310,13 @@ class BiologicMPTParser:
             self.logger.error("Failed to parse .mpt file", file_path=str(file_path), error=str(e))
             raise BiologicFormatError(f"Failed to parse .mpt file: {e}") from e
 
-    def _split_header_data(self, content: str) -> Tuple[List[str], List[str]]:
+    def _split_header_data(self, content: str) -> tuple[list[str], list[str]]:
         """Split file content into header and data sections."""
         lines = content.split("\n")
 
         # Find the data start marker (usually "Nb header lines")
         data_start_idx = 0
-        for i, line in enumerate(lines):
+        for _i, line in enumerate(lines):
             if line.strip().lower().startswith("nb header lines"):
                 try:
                     # Extract number of header lines
@@ -344,7 +344,7 @@ class BiologicMPTParser:
 
         return header_lines, data_lines
 
-    def _parse_header(self, header_lines: List[str], file_path: Path) -> BiologicMetadata:
+    def _parse_header(self, header_lines: list[str], file_path: Path) -> BiologicMetadata:
         """Parse metadata from header lines."""
         raw_header = {}
 
@@ -388,7 +388,7 @@ class BiologicMPTParser:
 
         return BiologicMetadata(**metadata_dict)
 
-    def _parse_data(self, data_lines: List[str], metadata: BiologicMetadata) -> BiologicData:
+    def _parse_data(self, data_lines: list[str], metadata: BiologicMetadata) -> BiologicData:
         """Parse data section into structured format."""
         if not data_lines:
             raise BiologicFormatError("No data section found")
@@ -458,7 +458,7 @@ class BiologicMPTParser:
         return self._convert_to_structured_data(data_rows, normalized_columns)
 
     def _convert_to_structured_data(
-        self, data_rows: List[List[str]], columns: List[str]
+        self, data_rows: list[list[str]], columns: list[str]
     ) -> BiologicData:
         """Convert raw data rows to structured BiologicData."""
         # Initialize data containers
@@ -468,7 +468,7 @@ class BiologicMPTParser:
 
         # Process each row
         for row in data_rows:
-            for i, (col, value) in enumerate(zip(columns, row)):
+            for _i, (col, value) in enumerate(zip(columns, row)):
                 try:
                     # Convert based on column type
                     if col in ["cycle number", "half cycle", "step_number"]:
@@ -496,7 +496,7 @@ class BiologicMPTParser:
                     if self.strict_validation:
                         raise BiologicDataValidationError(
                             f"Failed to convert value '{value}' in column '{col}': {e}"
-                        )
+                        ) from e
                     else:
                         # Use default value and warn
                         if col in ["cycle number", "half cycle", "step_number"]:

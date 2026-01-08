@@ -829,7 +829,7 @@ class CyclingAnalysisTemplate:
 
         except Exception as e:
             logger.error(f"Failed to create cycling analysis config: {str(e)}")
-            raise TemplateError(f"Configuration creation failed: {str(e)}")
+            raise TemplateError(f"Configuration creation failed: {str(e)}") from e
 
 
 class CapacityFadeTemplate:
@@ -888,7 +888,7 @@ class CapacityFadeTemplate:
 
         except Exception as e:
             logger.error(f"Failed to create capacity fade config: {str(e)}")
-            raise TemplateError(f"Configuration creation failed: {str(e)}")
+            raise TemplateError(f"Configuration creation failed: {str(e)}") from e
 
 
 class ImpedanceAnalysisTemplate:
@@ -953,7 +953,7 @@ class ImpedanceAnalysisTemplate:
 
         except Exception as e:
             logger.error(f"Failed to create impedance analysis config: {str(e)}")
-            raise TemplateError(f"Configuration creation failed: {str(e)}")
+            raise TemplateError(f"Configuration creation failed: {str(e)}") from e
 
 
 class VoltageProfileTemplate:
@@ -1001,7 +1001,7 @@ class VoltageProfileTemplate:
 
         except Exception as e:
             logger.error(f"Failed to create voltage profile config: {str(e)}")
-            raise TemplateError(f"Configuration creation failed: {str(e)}")
+            raise TemplateError(f"Configuration creation failed: {str(e)}") from e
 
 
 class EfficiencyAnalysisTemplate:
@@ -1058,7 +1058,7 @@ class EfficiencyAnalysisTemplate:
 
         except Exception as e:
             logger.error(f"Failed to create efficiency analysis config: {str(e)}")
-            raise TemplateError(f"Configuration creation failed: {str(e)}")
+            raise TemplateError(f"Configuration creation failed: {str(e)}") from e
 
 
 class ComparisonTemplate:
@@ -1130,7 +1130,7 @@ class ComparisonTemplate:
 
         except Exception as e:
             logger.error(f"Failed to create comparison config: {str(e)}")
-            raise TemplateError(f"Configuration creation failed: {str(e)}")
+            raise TemplateError(f"Configuration creation failed: {str(e)}") from e
 
 
 class TrendAnalysisTemplate:
@@ -1185,4 +1185,4 @@ class TrendAnalysisTemplate:
 
         except Exception as e:
             logger.error(f"Failed to create trend analysis config: {str(e)}")
-            raise TemplateError(f"Configuration creation failed: {str(e)}")
+            raise TemplateError(f"Configuration creation failed: {str(e)}") from e

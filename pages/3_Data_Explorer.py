@@ -288,7 +288,7 @@ with tab3:
                 corr_matrix = numeric_df.corr()
                 fig = px.imshow(
                     corr_matrix,
-                    labels=dict(color="Correlation"),
+                    labels={"color": "Correlation"},
                     color_continuous_scale="RdBu_r",
                     aspect="auto",
                     title="Feature Correlations",

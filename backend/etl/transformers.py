@@ -7,7 +7,7 @@ unit conversion, normalization, and custom transformations.
 import re
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -37,7 +37,7 @@ class BaseTransformer(ABC):
         self.logger = logger.bind(component=self.__class__.__name__)
 
     @abstractmethod
-    def transform(self, data: pd.DataFrame, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    def transform(self, data: pd.DataFrame, **kwargs) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Transform data and return results.
 
         Args:
@@ -52,12 +52,12 @@ class BaseTransformer(ABC):
         self,
         records_input: int,
         records_output: int,
-        columns_added: List[str] = None,
-        columns_removed: List[str] = None,
-        columns_modified: List[str] = None,
-        warnings: List[str] = None,
+        columns_added: list[str] = None,
+        columns_removed: list[str] = None,
+        columns_modified: list[str] = None,
+        warnings: list[str] = None,
         **kwargs,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Create transformation metadata."""
         return {
             "records_input": records_input,
@@ -77,7 +77,7 @@ class DataTransformer(BaseTransformer):
         """Initialize data transformer."""
         super().__init__()
 
-    def transform(self, data: pd.DataFrame, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    def transform(self, data: pd.DataFrame, **kwargs) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Apply general data transformations.
 
         Args:
@@ -155,9 +155,9 @@ class DataTransformer(BaseTransformer):
 
         except Exception as e:
             self.logger.error("Data transformation failed", error=str(e))
-            raise TransformationError(f"Data transformation failed: {e}")
+            raise TransformationError(f"Data transformation failed: {e}") from e
 
-    def _clean_column_names(self, data: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
+    def _clean_column_names(self, data: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
         """Clean and standardize column names."""
         original_columns = data.columns.tolist()
         cleaned_columns = []
@@ -184,7 +184,7 @@ class DataTransformer(BaseTransformer):
 
     def _handle_missing_values(
         self, data: pd.DataFrame, **kwargs
-    ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    ) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Handle missing values in the dataset."""
         strategy = kwargs.get("missing_value_strategy", "drop_rows")
         fill_value = kwargs.get("missing_fill_value", 0)
@@ -240,13 +240,11 @@ class DataTransformer(BaseTransformer):
 
         return data_cleaned, {"warnings": warnings}
 
-    def _standardize_data_types(self, data: pd.DataFrame) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    def _standardize_data_types(self, data: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Standardize data types based on column names and content."""
         modified_columns = []
 
         for col in data.columns:
-            data[col].dtype
-
             # Infer appropriate data type based on column name
             if any(keyword in col.lower() for keyword in ["time", "date", "timestamp"]):
                 if not pd.api.types.is_datetime64_any_dtype(data[col]):
@@ -286,7 +284,7 @@ class DataTransformer(BaseTransformer):
 
         return data, {"modified_columns": modified_columns}
 
-    def _add_derived_columns(self, data: pd.DataFrame) -> Tuple[pd.DataFrame, List[str]]:
+    def _add_derived_columns(self, data: pd.DataFrame) -> tuple[pd.DataFrame, list[str]]:
         """Add derived columns based on existing data."""
         derived_columns = []
 
@@ -330,7 +328,7 @@ class UnitConverter(BaseTransformer):
         super().__init__()
         self.conversion_rules = self._create_conversion_rules()
 
-    def _create_conversion_rules(self) -> Dict[str, UnitConversionRule]:
+    def _create_conversion_rules(self) -> dict[str, UnitConversionRule]:
         """Create unit conversion rules."""
         return {
             # Current conversions
@@ -403,7 +401,7 @@ class UnitConverter(BaseTransformer):
             ),
         }
 
-    def transform(self, data: pd.DataFrame, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    def transform(self, data: pd.DataFrame, **kwargs) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Apply unit conversions to data.
 
         Args:
@@ -478,7 +476,7 @@ class UnitConverter(BaseTransformer):
 
         except Exception as e:
             self.logger.error("Unit conversion failed", error=str(e))
-            raise TransformationError(f"Unit conversion failed: {e}")
+            raise TransformationError(f"Unit conversion failed: {e}") from e
 
     def _apply_conversion(self, series: pd.Series, rule: UnitConversionRule) -> pd.Series:
         """Apply unit conversion rule to a pandas Series."""
@@ -494,7 +492,7 @@ class UnitConverter(BaseTransformer):
 
         return converted
 
-    def _detect_auto_conversions(self, data: pd.DataFrame) -> Dict[str, str]:
+    def _detect_auto_conversions(self, data: pd.DataFrame) -> dict[str, str]:
         """Detect columns that should be auto-converted based on naming patterns."""
         auto_conversions = {}
 
@@ -527,7 +525,7 @@ class DataNormalizer(BaseTransformer):
         """Initialize data normalizer."""
         super().__init__()
 
-    def transform(self, data: pd.DataFrame, **kwargs) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    def transform(self, data: pd.DataFrame, **kwargs) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Apply data normalization and scaling.
 
         Args:
@@ -612,11 +610,11 @@ class DataNormalizer(BaseTransformer):
 
         except Exception as e:
             self.logger.error("Data normalization failed", error=str(e))
-            raise TransformationError(f"Data normalization failed: {e}")
+            raise TransformationError(f"Data normalization failed: {e}") from e
 
     def _apply_min_max_scaling(
-        self, data: pd.DataFrame, columns: List[str]
-    ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+        self, data: pd.DataFrame, columns: list[str]
+    ) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Apply min-max scaling (0-1 normalization)."""
         stats = {}
 
@@ -639,8 +637,8 @@ class DataNormalizer(BaseTransformer):
         return data, stats
 
     def _apply_z_score_normalization(
-        self, data: pd.DataFrame, columns: List[str]
-    ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+        self, data: pd.DataFrame, columns: list[str]
+    ) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Apply z-score normalization (mean=0, std=1)."""
         stats = {}
 
@@ -663,8 +661,8 @@ class DataNormalizer(BaseTransformer):
         return data, stats
 
     def _apply_robust_scaling(
-        self, data: pd.DataFrame, columns: List[str]
-    ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+        self, data: pd.DataFrame, columns: list[str]
+    ) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Apply robust scaling using median and IQR."""
         stats = {}
 

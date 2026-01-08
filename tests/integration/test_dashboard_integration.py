@@ -203,7 +203,7 @@ class TestDashboardWorkflow:
     async def test_dashboard_persistence_workflow(self):
         """Test dashboard save/load workflow."""
         # Create dashboard
-        config = self.builder.create_dashboard(
+        self.builder.create_dashboard(
             name="Persistent Dashboard",
             description="Test dashboard persistence",
             created_by="test_user",
@@ -260,7 +260,7 @@ class TestDashboardWorkflow:
         AccessController(permission_manager, share_manager)
 
         # Create and save dashboard
-        config = self.builder.create_dashboard(
+        self.builder.create_dashboard(
             name="Shareable Dashboard",
             description="Dashboard for sharing test",
             created_by="owner_user",
@@ -352,7 +352,7 @@ class TestDashboardWorkflow:
         iframe_generator = IFrameGenerator(embed_manager)
 
         # Create dashboard
-        config = self.builder.create_dashboard(
+        self.builder.create_dashboard(
             name="Embeddable Dashboard",
             description="Dashboard for embedding test",
             created_by="owner_user",
@@ -430,7 +430,7 @@ class TestDashboardWorkflow:
 
         # 1. Team lead creates dashboard
         lead_builder = DashboardBuilder()
-        config = lead_builder.create_dashboard(
+        lead_builder.create_dashboard(
             name="Team Battery Research",
             description="Collaborative research dashboard",
             created_by="team_lead",
@@ -502,7 +502,7 @@ class TestDashboardWorkflow:
     def test_dashboard_performance_with_large_data(self):
         """Test dashboard performance with large datasets."""
         # Create dashboard with large data simulation
-        config = self.builder.create_dashboard(
+        self.builder.create_dashboard(
             name="Performance Test Dashboard",
             description="Testing with large datasets",
             created_by="performance_tester",
@@ -572,9 +572,7 @@ class TestDashboardWorkflow:
     def test_dashboard_error_handling(self):
         """Test dashboard error handling scenarios."""
         # Test invalid widget positioning
-        config = self.builder.create_dashboard(
-            name="Error Test Dashboard", created_by="error_tester"
-        )
+        self.builder.create_dashboard(name="Error Test Dashboard", created_by="error_tester")
 
         # Try to add widget outside grid bounds
         with pytest.raises(DashboardError):
@@ -587,11 +585,12 @@ class TestDashboardWorkflow:
                 auto_position=False,  # Disable auto-positioning to force error
             )
 
-        # Test invalid widget configuration
-        with pytest.raises(Exception):  # Should raise validation error
-            invalid_kpi = KPIConfig(title="Invalid KPI")  # Missing required value
-            widget = create_widget(WidgetType.KPI, "invalid", invalid_kpi)
-            widget.validate_config()
+        # Test invalid widget configuration - Pydantic validates on creation
+        from pydantic import ValidationError
+
+        with pytest.raises(ValidationError):
+            # This should raise ValidationError because 'value' field is required
+            KPIConfig(title="Invalid KPI")
 
         # Test dashboard with no widgets (should still be valid)
         errors = self.builder.validate_dashboard()
@@ -605,7 +604,7 @@ class TestDashboardWorkflow:
     def test_real_world_battery_dashboard(self):
         """Test realistic battery analysis dashboard."""
         # Create comprehensive battery analysis dashboard
-        config = self.builder.create_dashboard(
+        self.builder.create_dashboard(
             name="Battery Lab Dashboard",
             description="Real-world battery testing and analysis",
             layout_type=LayoutType.GRID,

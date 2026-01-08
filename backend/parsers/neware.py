@@ -19,7 +19,7 @@ import logging
 import warnings
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import Any, Optional, Union
 
 import pandas as pd
 import structlog
@@ -31,7 +31,9 @@ try:
     HAS_NEWARE_NDA = True
 except ImportError:
     HAS_NEWARE_NDA = False
-    warnings.warn("NewareNDA library not available. Install with: pip install NewareNDA")
+    warnings.warn(
+        "NewareNDA library not available. Install with: pip install NewareNDA", stacklevel=2
+    )
 
 logger = structlog.get_logger(__name__)
 
@@ -63,7 +65,7 @@ class NewareChannelMetadata(BaseModel):
     # Cell specifications
     active_mass_mg: Optional[float] = Field(None, description="Active mass in mg")
     capacity_mah: Optional[float] = Field(None, description="Nominal capacity in mAh")
-    voltage_range: Optional[Tuple[float, float]] = Field(
+    voltage_range: Optional[tuple[float, float]] = Field(
         None, description="Voltage range (min, max)"
     )
 
@@ -81,7 +83,7 @@ class NewareChannelMetadata(BaseModel):
     total_records: Optional[int] = Field(None, description="Total number of data records")
 
     # Raw metadata
-    raw_metadata: Dict[str, Any] = Field(default_factory=dict, description="Raw channel metadata")
+    raw_metadata: dict[str, Any] = Field(default_factory=dict, description="Raw channel metadata")
 
 
 class NewareMetadata(BaseModel):
@@ -105,65 +107,65 @@ class NewareMetadata(BaseModel):
 
     # Channel information
     channel_count: int = Field(1, description="Number of channels in file")
-    channels: List[NewareChannelMetadata] = Field(
+    channels: list[NewareChannelMetadata] = Field(
         default_factory=list, description="Channel metadata"
     )
 
     # Raw file metadata
-    raw_metadata: Dict[str, Any] = Field(default_factory=dict, description="Raw file metadata")
+    raw_metadata: dict[str, Any] = Field(default_factory=dict, description="Raw file metadata")
 
 
 class NewareData(BaseModel):
     """Parsed data from Neware file."""
 
     # Required columns based on specifications
-    record_id: List[int] = Field(description="Record ID index")
-    realtime: List[datetime] = Field(description="Real timestamp for each point")
-    time_h: List[float] = Field(description="Test time in hours")
-    step_id: List[int] = Field(description="Step ID index")
-    cycle_id: List[int] = Field(description="Cycle ID index")
+    record_id: list[int] = Field(description="Record ID index")
+    realtime: list[datetime] = Field(description="Real timestamp for each point")
+    time_h: list[float] = Field(description="Test time in hours")
+    step_id: list[int] = Field(description="Step ID index")
+    cycle_id: list[int] = Field(description="Cycle ID index")
 
     # Core measurements
-    current_ma: List[float] = Field(description="Cell current in mA")
-    voltage_v: List[float] = Field(description="Cell voltage in V")
+    current_ma: list[float] = Field(description="Cell current in mA")
+    voltage_v: list[float] = Field(description="Cell voltage in V")
 
     # Capacity data
-    capacitance_chg_mah: List[float] = Field(description="Charge capacity in mAh")
-    capacitance_dchg_mah: List[float] = Field(description="Discharge capacity in mAh")
+    capacitance_chg_mah: list[float] = Field(description="Charge capacity in mAh")
+    capacitance_dchg_mah: list[float] = Field(description="Discharge capacity in mAh")
 
     # Energy data
-    engy_chg_mwh: List[float] = Field(description="Charge energy in mWh")
-    engy_dchg_mwh: List[float] = Field(description="Discharge energy in mWh")
+    engy_chg_mwh: list[float] = Field(description="Charge energy in mWh")
+    engy_dchg_mwh: list[float] = Field(description="Discharge energy in mWh")
 
     # Additional measurements
-    dcir_ohm: Optional[List[float]] = Field(None, description="DC internal resistance in Ohms")
-    capacity_mah: Optional[List[float]] = Field(None, description="Total capacity in mAh")
-    capacity_density_mah_g: Optional[List[float]] = Field(
+    dcir_ohm: Optional[list[float]] = Field(None, description="DC internal resistance in Ohms")
+    capacity_mah: Optional[list[float]] = Field(None, description="Total capacity in mAh")
+    capacity_density_mah_g: Optional[list[float]] = Field(
         None, description="Capacity density in mAh/g"
     )
-    energy_mwh: Optional[List[float]] = Field(None, description="Total energy in mWh")
-    cmp_eng_mwh_g: Optional[List[float]] = Field(None, description="Energy density in mWh/g")
+    energy_mwh: Optional[list[float]] = Field(None, description="Total energy in mWh")
+    cmp_eng_mwh_g: Optional[list[float]] = Field(None, description="Energy density in mWh/g")
 
     # Temperature data
-    min_temp_c: Optional[List[float]] = Field(None, description="Minimum temperature in °C")
-    max_temp_c: Optional[List[float]] = Field(None, description="Maximum temperature in °C")
-    avg_temp_c: Optional[List[float]] = Field(None, description="Average temperature in °C")
-    temperature_c: Optional[List[float]] = Field(
+    min_temp_c: Optional[list[float]] = Field(None, description="Minimum temperature in °C")
+    max_temp_c: Optional[list[float]] = Field(None, description="Maximum temperature in °C")
+    avg_temp_c: Optional[list[float]] = Field(None, description="Average temperature in °C")
+    temperature_c: Optional[list[float]] = Field(
         None, description="Temperature (alternate sensor) in °C"
     )
 
     # Power and differential data
-    power_mw: Optional[List[float]] = Field(None, description="Instantaneous power in mW")
-    dq_dv_mah_v: Optional[List[float]] = Field(None, description="Differential capacity in mAh/V")
-    dqm_dv_mah_v_g: Optional[List[float]] = Field(
+    power_mw: Optional[list[float]] = Field(None, description="Instantaneous power in mW")
+    dq_dv_mah_v: Optional[list[float]] = Field(None, description="Differential capacity in mAh/V")
+    dqm_dv_mah_v_g: Optional[list[float]] = Field(
         None, description="Differential capacity density in mAh/V·g"
     )
 
     # Channel information
-    channel_number: Optional[List[int]] = Field(None, description="Channel number for each record")
+    channel_number: Optional[list[int]] = Field(None, description="Channel number for each record")
 
     # Additional data for columns not explicitly defined
-    additional_data: Dict[str, List[Any]] = Field(
+    additional_data: dict[str, list[Any]] = Field(
         default_factory=dict, description="Additional columns"
     )
 
@@ -273,7 +275,7 @@ class NewareNDAParser:
             "channel_number": "Channel",
         }
 
-    def parse_file(self, file_path: Union[str, Path]) -> Tuple[NewareData, NewareMetadata]:
+    def parse_file(self, file_path: Union[str, Path]) -> tuple[NewareData, NewareMetadata]:
         """Parse a Neware .nda/.ndax file.
 
         Args:
@@ -294,7 +296,10 @@ class NewareNDAParser:
 
         # Check file extension
         if file_path.suffix.lower() not in [".nda", ".ndax", ".csv"]:
-            warnings.warn(f"File does not have expected extension (.nda/.ndax/.csv): {file_path}")
+            warnings.warn(
+                f"File does not have expected extension (.nda/.ndax/.csv): {file_path}",
+                stacklevel=2,
+            )
 
         self.logger.info("Parsing Neware file", file_path=str(file_path))
 
@@ -319,7 +324,7 @@ class NewareNDAParser:
                     self.logger.info("Successfully loaded with NewareNDA", shape=df.shape)
                 except Exception as e:
                     self.logger.error("NewareNDA failed to read file", error=str(e))
-                    raise NewareFormatError(f"Failed to read Neware file: {e}")
+                    raise NewareFormatError(f"Failed to read Neware file: {e}") from e
                 finally:
                     neware_logger.removeHandler(log_handler)
 

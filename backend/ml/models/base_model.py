@@ -7,7 +7,7 @@ Abstract base class that all RUL prediction models must implement.
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Optional
 
 import joblib
 import numpy as np
@@ -17,7 +17,7 @@ import pandas as pd
 class BaseRULModel(ABC):
     """Abstract base class for RUL prediction models."""
 
-    def __init__(self, model_name: str, hyperparameters: Optional[Dict[str, Any]] = None):
+    def __init__(self, model_name: str, hyperparameters: Optional[dict[str, Any]] = None):
         """
         Initialize base model.
 
@@ -33,7 +33,7 @@ class BaseRULModel(ABC):
         self.training_history = []
 
     @abstractmethod
-    def get_default_hyperparameters(self) -> Dict[str, Any]:
+    def get_default_hyperparameters(self) -> dict[str, Any]:
         """Get default hyperparameters for the model."""
 
     @abstractmethod
@@ -75,7 +75,7 @@ class BaseRULModel(ABC):
 
     def predict_with_uncertainty(
         self, X: pd.DataFrame, n_iterations: int = 100
-    ) -> Tuple[np.ndarray, np.ndarray]:
+    ) -> tuple[np.ndarray, np.ndarray]:
         """
         Make predictions with uncertainty estimates (if supported).
 

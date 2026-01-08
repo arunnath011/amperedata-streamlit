@@ -14,7 +14,6 @@ Features include:
 """
 
 import warnings
-from typing import Any, Dict
 
 import numpy as np
 import pandas as pd
@@ -170,12 +169,12 @@ class BatteryFeatureEngineer:
 
         return pd.DataFrame(features_list)
 
-    def _extract_capacity_features(self, data: pd.DataFrame) -> Dict[str, float]:
+    def _extract_capacity_features(self, data: pd.DataFrame) -> dict[str, float]:
         """Extract capacity-related features."""
         capacity = data.groupby("cycle_number")["discharge_capacity"].mean()
 
         if len(capacity) < 2:
-            return {feat: 0.0 for feat in self.CAPACITY_FEATURES}
+            return dict.fromkeys(self.CAPACITY_FEATURES, 0.0)
 
         # Calculate fade rate (linear regression slope)
         x = np.arange(len(capacity))
@@ -197,15 +196,15 @@ class BatteryFeatureEngineer:
             "capacity_trend_strength": r_squared,
         }
 
-    def _extract_voltage_features(self, data: pd.DataFrame) -> Dict[str, float]:
+    def _extract_voltage_features(self, data: pd.DataFrame) -> dict[str, float]:
         """Extract voltage-related features."""
         if "voltage" not in data.columns:
-            return {feat: 0.0 for feat in self.VOLTAGE_FEATURES}
+            return dict.fromkeys(self.VOLTAGE_FEATURES, 0.0)
 
         voltage = data["voltage"].dropna()
 
         if len(voltage) < 2:
-            return {feat: 0.0 for feat in self.VOLTAGE_FEATURES}
+            return dict.fromkeys(self.VOLTAGE_FEATURES, 0.0)
 
         # Voltage drop rate
         v_by_cycle = data.groupby("cycle_number")["voltage"].mean()
@@ -219,7 +218,7 @@ class BatteryFeatureEngineer:
         try:
             peaks, _ = find_peaks(voltage.values, height=voltage.mean())
             peak_count = len(peaks) / len(voltage)  # Normalized
-        except:
+        except Exception:
             peak_count = 0
 
         return {
@@ -230,15 +229,15 @@ class BatteryFeatureEngineer:
             "voltage_peak_count": peak_count,
         }
 
-    def _extract_current_features(self, data: pd.DataFrame) -> Dict[str, float]:
+    def _extract_current_features(self, data: pd.DataFrame) -> dict[str, float]:
         """Extract current-related features."""
         if "current" not in data.columns:
-            return {feat: 0.0 for feat in self.CURRENT_FEATURES}
+            return dict.fromkeys(self.CURRENT_FEATURES, 0.0)
 
         current = data["current"].dropna()
 
         if len(current) < 2:
-            return {feat: 0.0 for feat in self.CURRENT_FEATURES}
+            return dict.fromkeys(self.CURRENT_FEATURES, 0.0)
 
         # Separate charge and discharge
         charge_current = current[current > 0]
@@ -258,7 +257,7 @@ class BatteryFeatureEngineer:
             "current_asymmetry": current_asymmetry,
         }
 
-    def _extract_efficiency_features(self, data: pd.DataFrame) -> Dict[str, float]:
+    def _extract_efficiency_features(self, data: pd.DataFrame) -> dict[str, float]:
         """Extract efficiency-related features."""
         efficiency_features = {}
 
@@ -268,7 +267,7 @@ class BatteryFeatureEngineer:
         )
 
         if len(cycle_stats) < 2:
-            return {feat: 0.0 for feat in self.EFFICIENCY_FEATURES}
+            return dict.fromkeys(self.EFFICIENCY_FEATURES, 0.0)
 
         # Coulombic efficiency
         ce = (cycle_stats["discharge_capacity"] / cycle_stats["charge_capacity"]) * 100
@@ -305,18 +304,18 @@ class BatteryFeatureEngineer:
 
         return efficiency_features
 
-    def _extract_statistical_features(self, data: pd.DataFrame) -> Dict[str, float]:
+    def _extract_statistical_features(self, data: pd.DataFrame) -> dict[str, float]:
         """Extract statistical features."""
         capacity_by_cycle = data.groupby("cycle_number")["discharge_capacity"].mean()
 
         if len(capacity_by_cycle) < 3:
-            return {feat: 0.0 for feat in self.STATISTICAL_FEATURES}
+            return dict.fromkeys(self.STATISTICAL_FEATURES, 0.0)
 
         # Skewness and kurtosis
         try:
             skewness = stats.skew(capacity_by_cycle.values)
             kurtosis = stats.kurtosis(capacity_by_cycle.values)
-        except:
+        except Exception:
             skewness = 0
             kurtosis = 0
 
@@ -332,7 +331,7 @@ class BatteryFeatureEngineer:
             hist, _ = np.histogram(capacity_by_cycle.values, bins=10)
             hist = hist / hist.sum()  # Normalize
             entropy = stats.entropy(hist + 1e-10)  # Add small value to avoid log(0)
-        except:
+        except Exception:
             entropy = 0
 
         return {
@@ -342,7 +341,7 @@ class BatteryFeatureEngineer:
             "capacity_entropy": entropy,
         }
 
-    def _extract_cycle_features(self, data: pd.DataFrame) -> Dict[str, float]:
+    def _extract_cycle_features(self, data: pd.DataFrame) -> dict[str, float]:
         """Extract cycle-related features."""
         cycle_count = data["cycle_number"].nunique()
 
@@ -388,12 +387,12 @@ class BatteryFeatureEngineer:
             "time_at_high_current": time_at_high_i,
         }
 
-    def _extract_temperature_features(self, data: pd.DataFrame) -> Dict[str, float]:
+    def _extract_temperature_features(self, data: pd.DataFrame) -> dict[str, float]:
         """Extract temperature-related features."""
         temp = data["temperature"].dropna()
 
         if len(temp) < 2:
-            return {feat: 0.0 for feat in self.TEMPERATURE_FEATURES}
+            return dict.fromkeys(self.TEMPERATURE_FEATURES, 0.0)
 
         # Temperature rise rate
         temp_by_cycle = data.groupby("cycle_number")["temperature"].mean()
@@ -445,7 +444,7 @@ class BatteryFeatureEngineer:
 
         return max(0, rul)  # RUL can't be negative
 
-    def get_feature_descriptions(self) -> Dict[str, str]:
+    def get_feature_descriptions(self) -> dict[str, str]:
         """Get descriptions of all features."""
         return {
             # Capacity

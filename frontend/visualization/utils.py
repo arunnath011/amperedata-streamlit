@@ -191,7 +191,7 @@ class DataProcessor:
 
         except Exception as e:
             logger.error(f"Data cleaning failed: {str(e)}")
-            raise DataFormatError(f"Data cleaning failed: {str(e)}")
+            raise DataFormatError(f"Data cleaning failed: {str(e)}") from e
 
     @staticmethod
     def resample_data(
@@ -243,7 +243,7 @@ class DataProcessor:
 
         except Exception as e:
             logger.error(f"Data resampling failed: {str(e)}")
-            raise DataFormatError(f"Data resampling failed: {str(e)}")
+            raise DataFormatError(f"Data resampling failed: {str(e)}") from e
 
     @staticmethod
     def calculate_statistics(data: pd.DataFrame) -> dict[str, Any]:
@@ -360,7 +360,7 @@ class ChartExporter:
 
         except Exception as e:
             logger.error(f"Figure export failed: {str(e)}")
-            raise ExportError(f"Export failed: {str(e)}")
+            raise ExportError(f"Export failed: {str(e)}") from e
 
     def create_export_batch(
         self, figures: list[Any], export_configs: list[ExportConfig]

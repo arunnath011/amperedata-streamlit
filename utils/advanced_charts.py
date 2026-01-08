@@ -98,8 +98,8 @@ class AdvancedBatteryCharts:
                     y=energy_density * multiplier,
                     mode="markers+lines",
                     name=battery_id,
-                    marker=dict(size=10, line=dict(width=1, color="white")),
-                    line=dict(width=2),
+                    marker={"size": 10, "line": {"width": 1, "color": "white"}},
+                    line={"width": 2},
                     hovertemplate=(
                         f"<b>{battery_id}</b><br>"
                         f"{x_label}: %{{x:.2f}}<br>"
@@ -116,7 +116,7 @@ class AdvancedBatteryCharts:
             x1=300,
             y0=50,
             y1=150,
-            line=dict(color="lightgray", width=1, dash="dash"),
+            line={"color": "lightgray", "width": 1, "dash": "dash"},
             fillcolor="lightgray",
             opacity=0.1,
             layer="below",
@@ -137,13 +137,13 @@ class AdvancedBatteryCharts:
             height=600,
             hovermode="closest",
             showlegend=True,
-            legend=dict(
-                yanchor="top",
-                y=0.99,
-                xanchor="right",
-                x=0.99,
-                bgcolor="rgba(255,255,255,0.8)",
-            ),
+            legend={
+                "yanchor": "top",
+                "y": 0.99,
+                "xanchor": "right",
+                "x": 0.99,
+                "bgcolor": "rgba(255,255,255,0.8)",
+            },
         )
 
         return fig
@@ -188,7 +188,7 @@ class AdvancedBatteryCharts:
                     y=ce,
                     mode="markers",
                     name=f"{battery_id}",
-                    marker=dict(size=6, opacity=0.6),
+                    marker={"size": 6, "opacity": 0.6},
                     hovertemplate=(
                         f"<b>{battery_id}</b><br>"
                         "Cycle: %{x}<br>"
@@ -207,7 +207,7 @@ class AdvancedBatteryCharts:
                         y=ce_ma,
                         mode="lines",
                         name=f"{battery_id} (MA-{ma_window})",
-                        line=dict(width=3),
+                        line={"width": 3},
                         hovertemplate=(
                             f"<b>{battery_id} Moving Avg</b><br>"
                             "Cycle: %{x}<br>"
@@ -242,7 +242,7 @@ class AdvancedBatteryCharts:
             height=600,
             hovermode="closest",
             showlegend=True,
-            yaxis=dict(range=[90, 105]),
+            yaxis={"range": [90, 105]},
         )
 
         return fig
@@ -288,7 +288,7 @@ class AdvancedBatteryCharts:
                     y=data["temperature_C"],
                     mode="lines",
                     name=f"{battery_id} Temp",
-                    line=dict(color=color, width=2),
+                    line={"color": color, "width": 2},
                     hovertemplate=(
                         f"<b>{battery_id}</b><br>"
                         "Time: %{x:.2f} h<br>"
@@ -308,7 +308,7 @@ class AdvancedBatteryCharts:
                         y=data["current_A"],
                         mode="lines",
                         name=f"{battery_id} Current",
-                        line=dict(color=color, width=2, dash="dot"),
+                        line={"color": color, "width": 2, "dash": "dot"},
                         hovertemplate=(
                             f"<b>{battery_id}</b><br>"
                             "Time: %{x:.2f} h<br>"
@@ -405,8 +405,8 @@ class AdvancedBatteryCharts:
                     y=soh,
                     mode="lines+markers",
                     name=battery_id,
-                    line=dict(width=2),
-                    marker=dict(size=5),
+                    line={"width": 2},
+                    marker={"size": 5},
                     hovertemplate=(
                         f"<b>{battery_id}</b><br>"
                         "Cycle: %{x}<br>"
@@ -427,7 +427,7 @@ class AdvancedBatteryCharts:
                         y=p(data["cycle_number"]),
                         mode="lines",
                         name=f"{battery_id} Trend",
-                        line=dict(width=2, dash="dash"),
+                        line={"width": 2, "dash": "dash"},
                         opacity=0.5,
                         showlegend=False,
                         hoverinfo="skip",
@@ -475,7 +475,7 @@ class AdvancedBatteryCharts:
             height=600,
             hovermode="closest",
             showlegend=True,
-            yaxis=dict(range=[0, 110]),
+            yaxis={"range": [0, 110]},
         )
 
         return fig
@@ -483,7 +483,7 @@ class AdvancedBatteryCharts:
     @staticmethod
     def create_comparative_analysis(
         batteries_data: dict[str, pd.DataFrame],
-        metrics: list[str] = ["capacity", "voltage", "efficiency", "resistance"],
+        metrics: list[str] = None,
     ) -> go.Figure:
         """
         Create Comparative Analysis radar/spider chart.
@@ -498,6 +498,8 @@ class AdvancedBatteryCharts:
             Plotly figure
         """
         # Prepare data for radar chart
+        if metrics is None:
+            metrics = ["capacity", "voltage", "efficiency", "resistance"]
         categories = []
         battery_ids = list(batteries_data.keys())
 
@@ -508,7 +510,7 @@ class AdvancedBatteryCharts:
             categories.append(metric.capitalize())
             values = []
 
-            for battery_id, data in batteries_data.items():
+            for _battery_id, data in batteries_data.items():
                 if metric == "capacity":
                     val = (
                         data["discharge_capacity"].mean()
@@ -552,7 +554,7 @@ class AdvancedBatteryCharts:
                     theta=categories + [categories[0]],
                     fill="toself",
                     name=battery_id,
-                    line=dict(color=colors[idx % len(colors)], width=2),
+                    line={"color": colors[idx % len(colors)], "width": 2},
                     opacity=0.6,
                 )
             )
@@ -564,11 +566,11 @@ class AdvancedBatteryCharts:
                 "xanchor": "center",
                 "font": {"size": 20, "family": "Arial, sans-serif"},
             },
-            polar=dict(radialaxis=dict(visible=True, range=[0, 100], ticksuffix="%")),
+            polar={"radialaxis": {"visible": True, "range": [0, 100], "ticksuffix": "%"}},
             template="plotly_white",
             height=600,
             showlegend=True,
-            legend=dict(orientation="v", yanchor="middle", y=0.5, xanchor="left", x=1.1),
+            legend={"orientation": "v", "yanchor": "middle", "y": 0.5, "xanchor": "left", "x": 1.1},
         )
 
         return fig
@@ -588,7 +590,7 @@ class AdvancedBatteryCharts:
         """
         # Update layout for publication quality
         fig.update_layout(
-            font=dict(size=14, family="Arial, sans-serif"),
+            font={"size": 14, "family": "Arial, sans-serif"},
             plot_bgcolor="white",
             paper_bgcolor="white",
         )

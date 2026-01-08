@@ -435,7 +435,7 @@ class TestElectrochemicalWorkflows:
         sample_names = ["Sample A", "Sample B", "Sample C", "Sample D", "Sample E"]
         base_capacities = [2.5, 2.3, 2.7, 2.4, 2.6]  # Different initial capacities
 
-        for i, (name, capacity) in enumerate(zip(sample_names, base_capacities)):
+        for _i, (name, capacity) in enumerate(zip(sample_names, base_capacities)):
             cycle_data = CycleData(
                 name=name,
                 cycle_number=10,  # All at cycle 10 for comparison
@@ -610,7 +610,7 @@ class TestElectrochemicalWorkflows:
 
         # Scenario 2: Mismatched array lengths - Pydantic should catch this
         try:
-            mismatched_cycle = CycleData(
+            CycleData(
                 name="Mismatched Cycle",
                 cycle_number=1,
                 time=[0, 1, 2],

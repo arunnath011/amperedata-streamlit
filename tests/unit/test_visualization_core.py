@@ -495,7 +495,7 @@ class TestVisualizationUtils:
 
         # Test invalid config - mismatched data lengths should raise ValidationError
         with pytest.raises(ValidationError):
-            invalid_data = ChartData(x=[1, 2, 3], y=[2, 4])  # Mismatched lengths
+            ChartData(x=[1, 2, 3], y=[2, 4])  # Mismatched lengths
 
     def test_chart_hash_generation(self):
         """Test chart hash generation."""

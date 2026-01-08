@@ -7,7 +7,7 @@ themes, templates, and visualization settings.
 import uuid
 from datetime import datetime
 from enum import Enum
-from typing import Any, List, Optional, Union
+from typing import Any, Optional, Union
 
 from pydantic import BaseModel, Field, validator
 
@@ -89,13 +89,13 @@ class AnimationType(str, Enum):
 class ChartData(BaseModel):
     """Chart data model."""
 
-    x: List[Union[str, int, float, datetime]] = Field(description="X-axis data")
-    y: List[Union[int, float]] = Field(description="Y-axis data")
-    z: Optional[List[Union[int, float]]] = Field(None, description="Z-axis data (for 3D charts)")
-    text: Optional[List[str]] = Field(None, description="Text labels")
-    hover_text: Optional[List[str]] = Field(None, description="Hover text")
-    color: Optional[List[Union[str, int, float]]] = Field(None, description="Color data")
-    size: Optional[List[Union[int, float]]] = Field(None, description="Size data")
+    x: list[Union[str, int, float, datetime]] = Field(description="X-axis data")
+    y: list[Union[int, float]] = Field(description="Y-axis data")
+    z: Optional[list[Union[int, float]]] = Field(None, description="Z-axis data (for 3D charts)")
+    text: Optional[list[str]] = Field(None, description="Text labels")
+    hover_text: Optional[list[str]] = Field(None, description="Hover text")
+    color: Optional[list[Union[str, int, float]]] = Field(None, description="Color data")
+    size: Optional[list[Union[int, float]]] = Field(None, description="Size data")
     error_x: Optional[list[float]] = Field(None, description="X-axis error bars")
     error_y: Optional[list[float]] = Field(None, description="Y-axis error bars")
 
