@@ -19,7 +19,7 @@ import logging
 import warnings
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional, Dict, List, Union, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import pandas as pd
 import structlog
@@ -63,7 +63,9 @@ class NewareChannelMetadata(BaseModel):
     # Cell specifications
     active_mass_mg: Optional[float] = Field(None, description="Active mass in mg")
     capacity_mah: Optional[float] = Field(None, description="Nominal capacity in mAh")
-    voltage_range: Optional[Tuple[float, float]] = Field(None, description="Voltage range (min, max)")
+    voltage_range: Optional[Tuple[float, float]] = Field(
+        None, description="Voltage range (min, max)"
+    )
 
     # Test parameters
     temperature_c: Optional[float] = Field(None, description="Test temperature in Celsius")

@@ -8,7 +8,7 @@ import hashlib
 import json
 import logging
 from datetime import datetime
-from typing import Optional, Any
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -764,9 +764,11 @@ class ValidationUtils:
             performance_factors = [
                 1.0 - min(data_size / 100000, 1.0),  # Data size factor
                 1.0 if not config.data.color else 0.9,  # Color mapping factor
-                1.0
-                if not config.animation.type or config.animation.type.value == "none"
-                else 0.8,  # Animation factor
+                (
+                    1.0
+                    if not config.animation.type or config.animation.type.value == "none"
+                    else 0.8
+                ),  # Animation factor
             ]
             performance_score = np.mean(performance_factors)
 

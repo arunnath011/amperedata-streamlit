@@ -6,7 +6,7 @@ Gradient boosting model optimized for battery RUL prediction.
 Expected performance: 95%+ R² score, < 5 cycles MAE.
 """
 
-from typing import Any, Optional, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import numpy as np
 import pandas as pd

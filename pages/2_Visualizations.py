@@ -1710,9 +1710,11 @@ else:
                                 / capacity_df["discharge_capacity"].iloc[0]
                                 * 100
                             ),
-                            "Avg Re (Ω)": resistance_df["Re"].mean()
-                            if not resistance_df.empty and "Re" in resistance_df.columns
-                            else 0,
+                            "Avg Re (Ω)": (
+                                resistance_df["Re"].mean()
+                                if not resistance_df.empty and "Re" in resistance_df.columns
+                                else 0
+                            ),
                         }
                     )
 

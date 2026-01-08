@@ -6,7 +6,7 @@ user roles and battery analysis scenarios, enabling quick dashboard creation.
 
 import logging
 from datetime import datetime
-from typing import Optional, Any
+from typing import Any, Optional
 
 from frontend.visualization.models import ChartConfig, ChartData, ChartType
 

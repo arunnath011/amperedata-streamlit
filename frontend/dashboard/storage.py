@@ -8,7 +8,7 @@ import hashlib
 import logging
 from datetime import datetime
 from pathlib import Path
-from typing import Optional, Any
+from typing import Any, Optional
 
 try:
     from sqlalchemy import Boolean, Column, DateTime, Integer, LargeBinary, String, Text
@@ -452,7 +452,9 @@ class VersionManager:
             logger.error(f"Failed to get versions for dashboard {dashboard_id}: {str(e)}")
             return []
 
-    async def get_version(self, dashboard_id: str, version_number: int) -> Optional[DashboardVersion]:
+    async def get_version(
+        self, dashboard_id: str, version_number: int
+    ) -> Optional[DashboardVersion]:
         """Get specific version.
 
         Args:
@@ -605,7 +607,9 @@ class VersionManager:
             logger.error(f"Failed to rollback dashboard: {str(e)}")
             return False
 
-    async def _save_version(self, version: DashboardVersion, checksum: Optional[str] = None) -> bool:
+    async def _save_version(
+        self, version: DashboardVersion, checksum: Optional[str] = None
+    ) -> bool:
         """Save version to storage."""
         # TODO: Implement version storage (database or file system)
         # For now, just log the operation

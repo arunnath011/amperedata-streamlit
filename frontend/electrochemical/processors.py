@@ -4,11 +4,11 @@ This module provides data processing and analysis functions for various
 types of electrochemical data including cycle analysis, differential analysis,
 EIS processing, and statistical comparisons.
 """
-from typing import Optional
 
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
+from typing import Optional
 
 import numpy as np
 
@@ -807,9 +807,9 @@ class ComparisonAnalyzer(ElectrochemicalProcessor):
 
             # Calculate variability metrics
             variability_metrics = {
-                "coefficient_of_variation": float(np.std(values) / np.mean(values))
-                if np.mean(values) != 0
-                else 0.0,
+                "coefficient_of_variation": (
+                    float(np.std(values) / np.mean(values)) if np.mean(values) != 0 else 0.0
+                ),
                 "range": float(np.max(values) - np.min(values)),
                 "iqr": float(np.percentile(values, 75) - np.percentile(values, 25)),
             }

@@ -7,7 +7,7 @@ and styling to enable consistent and customizable visualizations.
 import json
 import logging
 from pathlib import Path
-from typing import Union, Optional, Any
+from typing import Any, Optional, Union
 
 from .exceptions import ConfigurationError, TemplateError, ThemeError
 from .models import (

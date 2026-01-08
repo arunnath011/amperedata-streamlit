@@ -22,7 +22,7 @@ import re
 import warnings
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Optional, Dict, List, Union, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import pandas as pd
 import structlog
@@ -76,7 +76,9 @@ class BiologicMetadata(BaseModel):
     )
     current_range: Optional[float] = Field(None, description="Current range in A")
     scan_rate: Optional[float] = Field(None, description="Scan rate in V/s for CV")
-    frequency_range: Optional[Tuple[float, float]] = Field(None, description="Frequency range for EIS")
+    frequency_range: Optional[Tuple[float, float]] = Field(
+        None, description="Frequency range for EIS"
+    )
 
     # Raw header data
     raw_header: Dict[str, Any] = Field(

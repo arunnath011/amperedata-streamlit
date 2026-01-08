@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime
 from enum import Enum
 from pathlib import Path
-from typing import Any, Optional, Dict, List
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -207,7 +207,9 @@ class ETLJob(BaseModel):
 
     # Phase results
     ingestion_result: Optional[IngestionResult] = Field(None, description="Ingestion phase result")
-    validation_result: Optional[ValidationResult] = Field(None, description="Validation phase result")
+    validation_result: Optional[ValidationResult] = Field(
+        None, description="Validation phase result"
+    )
     transformation_result: Optional[TransformationResult] = Field(
         None, description="Transformation phase result"
     )

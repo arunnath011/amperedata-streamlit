@@ -268,7 +268,7 @@ class TestDashboardWidgets:
     def test_widget_validation_errors(self):
         """Test widget validation error handling."""
         from pydantic import ValidationError
-        
+
         # Test KPI without value - Pydantic V2 validates on creation
         with pytest.raises(ValidationError):
             config = KPIConfig(title="Invalid KPI")  # Missing required 'value' field
@@ -492,8 +492,8 @@ class TestDashboardStorage:
 
     def test_dashboard_save_and_load(self):
         """Test dashboard save and load operations with mocks (Pydantic V2 serialization issues)."""
-        from unittest.mock import patch, MagicMock
-        
+        from unittest.mock import MagicMock, patch
+
         # Create test dashboard
         layout = DashboardLayout(type=LayoutType.GRID)
         config = DashboardConfig(
@@ -504,12 +504,12 @@ class TestDashboardStorage:
         )
 
         # Mock save and load due to Pydantic V2 serialization changes
-        with patch.object(self.storage, '_save_to_file', return_value=True) as mock_save:
+        with patch.object(self.storage, "_save_to_file", return_value=True) as mock_save:
             success = mock_save(config)
             assert success is True
 
         # Mock load to return the config
-        with patch.object(self.storage, '_load_from_file', return_value=config) as mock_load:
+        with patch.object(self.storage, "_load_from_file", return_value=config) as mock_load:
             loaded_config = mock_load(config.id)
             assert loaded_config is not None
             assert loaded_config.name == "Test Dashboard"
@@ -519,25 +519,25 @@ class TestDashboardStorage:
     def test_dashboard_deletion(self):
         """Test dashboard deletion with mocks."""
         from unittest.mock import patch
-        
+
         # Create dashboard config
         layout = DashboardLayout(type=LayoutType.GRID)
         config = DashboardConfig(name="Deletable Dashboard", layout=layout, created_by="test_user")
 
         # Mock save, load, and delete operations
-        with patch.object(self.storage, '_save_to_file', return_value=True):
+        with patch.object(self.storage, "_save_to_file", return_value=True):
             pass  # Save mocked
 
-        with patch.object(self.storage, '_load_from_file', return_value=config) as mock_load:
+        with patch.object(self.storage, "_load_from_file", return_value=config) as mock_load:
             loaded = mock_load(config.id)
             assert loaded is not None
 
-        with patch.object(self.storage, '_delete_from_file', return_value=True) as mock_delete:
+        with patch.object(self.storage, "_delete_from_file", return_value=True) as mock_delete:
             success = mock_delete(config.id)
             assert success is True
 
         # Verify deletion - mock returns None
-        with patch.object(self.storage, '_load_from_file', return_value=None) as mock_load:
+        with patch.object(self.storage, "_load_from_file", return_value=None) as mock_load:
             loaded = mock_load(config.id)
             assert loaded is None
 
@@ -563,8 +563,9 @@ class TestDashboardPermissions:
     async def test_permission_granting(self):
         """Test permission granting with mocks."""
         from unittest.mock import AsyncMock
+
         from frontend.dashboard.models import DashboardPermission
-        
+
         # Create test dashboard
         layout = DashboardLayout(type=LayoutType.GRID)
         config = DashboardConfig(
@@ -572,7 +573,9 @@ class TestDashboardPermissions:
         )
 
         # Mock save dashboard
-        with patch.object(self.storage, 'save_dashboard', new_callable=AsyncMock, return_value=True):
+        with patch.object(
+            self.storage, "save_dashboard", new_callable=AsyncMock, return_value=True
+        ):
             pass
 
         # Create mock permission result
@@ -585,7 +588,12 @@ class TestDashboardPermissions:
 
         # Mock permission granting
         with patch.object(self.permission_manager, "check_permission", return_value=True):
-            with patch.object(self.permission_manager, "grant_permission", new_callable=AsyncMock, return_value=mock_permission):
+            with patch.object(
+                self.permission_manager,
+                "grant_permission",
+                new_callable=AsyncMock,
+                return_value=mock_permission,
+            ):
                 permission = await self.permission_manager.grant_permission(
                     dashboard_id=config.id,
                     user_id="test_user",
@@ -704,7 +712,9 @@ class TestDashboardTemplates:
                 category="Research",
                 role=DashboardRole.RESEARCHER,
                 config_template=DashboardConfig(
-                    name="Research", layout=DashboardLayout(type=LayoutType.GRID), created_by="system"
+                    name="Research",
+                    layout=DashboardLayout(type=LayoutType.GRID),
+                    created_by="system",
                 ),
                 tags=["research"],
                 created_by="system",
@@ -714,7 +724,9 @@ class TestDashboardTemplates:
                 category="Management",
                 role=DashboardRole.MANAGER,
                 config_template=DashboardConfig(
-                    name="Management", layout=DashboardLayout(type=LayoutType.GRID), created_by="system"
+                    name="Management",
+                    layout=DashboardLayout(type=LayoutType.GRID),
+                    created_by="system",
                 ),
                 tags=["management"],
                 created_by="system",

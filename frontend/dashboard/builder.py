@@ -6,7 +6,7 @@ layout management, widget positioning, and rendering orchestration.
 
 import logging
 from datetime import datetime
-from typing import Optional, Any
+from typing import Any, Optional
 
 from .exceptions import DashboardError, LayoutError, RenderingError, WidgetError
 from .models import (

@@ -18,7 +18,7 @@ Supported formats:
 import csv
 import re
 from pathlib import Path
-from typing import Any, Optional, Dict, List, Union, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import chardet
 import pandas as pd

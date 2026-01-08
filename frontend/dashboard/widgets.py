@@ -7,7 +7,7 @@ KPI cards, charts, tables, metrics, gauges, and custom widgets for battery data 
 import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Optional, Any
+from typing import Any, Optional
 
 import numpy as np
 import pandas as pd
@@ -217,9 +217,9 @@ class KPIWidget(BaseWidget):
                 diff = self.kpi_config.value - self.kpi_config.target
                 target_comparison = {
                     "difference": diff,
-                    "percentage": (diff / self.kpi_config.target) * 100
-                    if self.kpi_config.target != 0
-                    else 0,
+                    "percentage": (
+                        (diff / self.kpi_config.target) * 100 if self.kpi_config.target != 0 else 0
+                    ),
                 }
 
         return {
@@ -227,13 +227,15 @@ class KPIWidget(BaseWidget):
             "title": self.kpi_config.title,
             "value": formatted_value,
             "unit": self.kpi_config.unit,
-            "trend": {
-                "value": self.kpi_config.trend,
-                "indicator": trend_indicator,
-                "color": trend_color,
-            }
-            if self.kpi_config.trend is not None
-            else None,
+            "trend": (
+                {
+                    "value": self.kpi_config.trend,
+                    "indicator": trend_indicator,
+                    "color": trend_color,
+                }
+                if self.kpi_config.trend is not None
+                else None
+            ),
             "target": target_comparison,
             "color_scheme": self.kpi_config.color_scheme,
             "widget_id": self.widget_id,

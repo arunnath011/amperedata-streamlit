@@ -311,9 +311,10 @@ class TestElectrochemicalProcessors:
 
     def test_differential_analyzer(self):
         """Test differential analyzer with mocked result."""
-        from unittest.mock import patch, MagicMock
+        from unittest.mock import MagicMock, patch
+
         from frontend.electrochemical.models import AnalysisType, DifferentialResult
-        
+
         # Create test differential data
         voltage = np.linspace(3.0, 4.2, 50)
         capacity = np.cumsum(np.random.exponential(0.02, 50))  # Monotonic capacity
@@ -336,7 +337,7 @@ class TestElectrochemicalProcessors:
         mock_result.peak_intensities = []
 
         analyzer = DifferentialAnalyzer(self.parameters)
-        with patch.object(analyzer, 'process', return_value=mock_result):
+        with patch.object(analyzer, "process", return_value=mock_result):
             result = analyzer.process(diff_data)
 
         assert result.analysis_type == AnalysisType.DIFFERENTIAL
@@ -349,9 +350,10 @@ class TestElectrochemicalProcessors:
 
     def test_eis_analyzer(self):
         """Test EIS analyzer with mocked result."""
-        from unittest.mock import patch, MagicMock
+        from unittest.mock import MagicMock, patch
+
         from frontend.electrochemical.models import AnalysisType, EISResult
-        
+
         # Create test EIS data
         frequency = np.logspace(6, -2, 50)  # 1 MHz to 0.01 Hz
         # Simple RC circuit response
@@ -383,7 +385,7 @@ class TestElectrochemicalProcessors:
         mock_result.resistance_values = {"R1": 0.1, "R2": 0.5}
 
         analyzer = EISAnalyzer(self.parameters)
-        with patch.object(analyzer, 'process', return_value=mock_result):
+        with patch.object(analyzer, "process", return_value=mock_result):
             result = analyzer.process(eis_data)
 
         assert result.analysis_type == AnalysisType.EIS_NYQUIST
@@ -424,9 +426,10 @@ class TestElectrochemicalProcessors:
 
     def test_aging_analyzer(self):
         """Test aging analyzer with mocked result."""
-        from unittest.mock import patch, MagicMock
-        from frontend.electrochemical.models import AnalysisType, AgingResult
-        
+        from unittest.mock import MagicMock, patch
+
+        from frontend.electrochemical.models import AgingResult, AnalysisType
+
         # Create test aging data
         time_days = np.linspace(0, 365, 50)
         # Exponential decay model
@@ -453,7 +456,7 @@ class TestElectrochemicalProcessors:
         }
 
         analyzer = AgingAnalyzer(self.parameters)
-        with patch.object(analyzer, 'process', return_value=mock_result):
+        with patch.object(analyzer, "process", return_value=mock_result):
             result = analyzer.process(aging_data)
 
         assert result.analysis_type == AnalysisType.CALENDAR_AGING
@@ -670,10 +673,10 @@ class TestElectrochemicalVisualizations:
         )
 
         plot = DifferentialPlot(config)
-        
+
         # Mock the create_plot method to bypass internal analyzer issues
         mock_figure = Mock()
-        with patch.object(plot, 'create_plot', return_value=mock_figure):
+        with patch.object(plot, "create_plot", return_value=mock_figure):
             figure = plot.create_plot(diff_data)
             assert figure is not None
             assert figure == mock_figure

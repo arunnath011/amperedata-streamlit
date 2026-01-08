@@ -6,7 +6,7 @@ configurable rules, quality scoring, and detailed error reporting.
 
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Optional, Dict, List, Union, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 import numpy as np
 import pandas as pd

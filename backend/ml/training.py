@@ -8,7 +8,7 @@ Handles data loading, feature engineering, model training, and evaluation.
 
 import sqlite3
 from pathlib import Path
-from typing import Any, Optional, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import joblib
 import numpy as np

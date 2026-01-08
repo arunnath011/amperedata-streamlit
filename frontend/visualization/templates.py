@@ -3,9 +3,9 @@
 This module provides specialized chart templates for battery testing data analysis,
 including cycling analysis, capacity fade, impedance spectroscopy, and more.
 """
-from typing import Optional
 
 import logging
+from typing import Optional
 
 import pandas as pd
 

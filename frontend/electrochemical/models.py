@@ -106,7 +106,9 @@ class EISData(ElectrochemicalData):
     frequency: list[float] = Field(description="Frequency data (Hz)")
     impedance_real: list[float] = Field(description="Real impedance (Ohm)")
     impedance_imag: list[float] = Field(description="Imaginary impedance (Ohm)")
-    impedance_magnitude: Optional[list[float]] = Field(None, description="Impedance magnitude (Ohm)")
+    impedance_magnitude: Optional[list[float]] = Field(
+        None, description="Impedance magnitude (Ohm)"
+    )
     phase_angle: Optional[list[float]] = Field(None, description="Phase angle (degrees)")
     soc: Optional[float] = Field(None, description="State of charge (%)")
     voltage: Optional[float] = Field(None, description="Measurement voltage (V)")
@@ -374,7 +376,9 @@ class RateCapabilityResult(AnalysisResult):
 
     max_c_rate: float = Field(description="Maximum achievable C-rate")
     capacity_retention_at_1c: float = Field(description="Capacity retention at 1C (%)")
-    capacity_retention_at_5c: Optional[float] = Field(None, description="Capacity retention at 5C (%)")
+    capacity_retention_at_5c: Optional[float] = Field(
+        None, description="Capacity retention at 5C (%)"
+    )
     power_density_max: float = Field(description="Maximum power density (W/kg)")
     energy_density_at_1c: float = Field(description="Energy density at 1C (Wh/kg)")
     rate_capability_score: float = Field(description="Overall rate capability score (0-1)")
@@ -387,7 +391,9 @@ class AgingResult(AnalysisResult):
     calendar_life_prediction: Optional[float] = Field(
         None, description="Predicted calendar life (years)"
     )
-    cycle_life_prediction: Optional[float] = Field(None, description="Predicted cycle life (cycles)")
+    cycle_life_prediction: Optional[float] = Field(
+        None, description="Predicted cycle life (cycles)"
+    )
     dominant_aging_mechanism: str = Field(description="Dominant aging mechanism")
     aging_acceleration_factors: dict[str, float] = Field(
         default_factory=dict, description="Acceleration factors"

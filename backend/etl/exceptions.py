@@ -4,7 +4,7 @@ Custom exception hierarchy for ETL pipeline operations with detailed
 error information and recovery suggestions.
 """
 
-from typing import Any, Optional, Dict, List
+from typing import Any, Dict, List, Optional
 
 
 class ETLError(Exception):

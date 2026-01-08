@@ -13,8 +13,8 @@ Features include:
 - Statistical features (skewness, kurtosis, autocorrelation)
 """
 
-from typing import Any, Dict
 import warnings
+from typing import Any, Dict
 
 import numpy as np
 import pandas as pd

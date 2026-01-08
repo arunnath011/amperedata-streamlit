@@ -9,7 +9,7 @@ import logging
 import secrets
 from datetime import datetime
 from enum import Enum
-from typing import Optional, Any
+from typing import Any, Optional
 
 from .exceptions import PermissionError
 from .models import (
@@ -571,9 +571,11 @@ class ShareManager:
             "expires_at": share.expires_at,
             "is_expired": share.expires_at and share.expires_at < datetime.now(),
             "is_view_limited": share.max_views and share.view_count >= share.max_views,
-            "remaining_views": max(0, (share.max_views or float("inf")) - share.view_count)
-            if share.max_views
-            else None,
+            "remaining_views": (
+                max(0, (share.max_views or float("inf")) - share.view_count)
+                if share.max_views
+                else None
+            ),
         }
 
     async def _save_share(self, share: DashboardShare) -> bool:
@@ -725,9 +727,9 @@ class AccessController:
             "timestamp": datetime.now(),
             "dashboard_id": dashboard_id,
             "user_id": user_id,
-            "share_token": share_token[:8] + "..."
-            if share_token
-            else None,  # Partial token for security
+            "share_token": (
+                share_token[:8] + "..." if share_token else None
+            ),  # Partial token for security
             "access_method": access_method,
             "result": result.value,
             "required_permission": required_permission.value if required_permission else None,

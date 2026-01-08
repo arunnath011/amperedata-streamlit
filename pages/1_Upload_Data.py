@@ -138,12 +138,12 @@ def store_data_in_database(df: pd.DataFrame, battery_id: str, file_name: str):
                 df.groupby("cycle_number")
                 .agg(
                     {
-                        "discharge_capacity_ah": "mean"
-                        if "discharge_capacity_ah" in df.columns
-                        else lambda x: None,
-                        "charge_capacity_ah": "mean"
-                        if "charge_capacity_ah" in df.columns
-                        else lambda x: None,
+                        "discharge_capacity_ah": (
+                            "mean" if "discharge_capacity_ah" in df.columns else lambda x: None
+                        ),
+                        "charge_capacity_ah": (
+                            "mean" if "charge_capacity_ah" in df.columns else lambda x: None
+                        ),
                     }
                 )
                 .reset_index()

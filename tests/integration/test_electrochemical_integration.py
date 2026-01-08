@@ -12,7 +12,11 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from frontend.electrochemical.exceptions import CycleAnalysisError, DataProcessingError, PlottingError
+from frontend.electrochemical.exceptions import (
+    CycleAnalysisError,
+    DataProcessingError,
+    PlottingError,
+)
 from frontend.electrochemical.models import (
     AgingConfig,
     AgingData,
@@ -578,6 +582,7 @@ class TestElectrochemicalWorkflows:
     def test_error_recovery_workflow(self):
         """Test error handling and recovery in workflows."""
         from pydantic import ValidationError
+
         print("\n=== Testing Error Recovery Workflow ===")
 
         # Test with various problematic data

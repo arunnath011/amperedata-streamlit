@@ -4,7 +4,7 @@ This module defines custom exception classes for various dashboard-related error
 providing detailed error information for debugging and user feedback.
 """
 
-from typing import Optional, Any
+from typing import Any, Optional
 
 
 class DashboardError(Exception):

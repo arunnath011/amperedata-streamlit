@@ -7,7 +7,7 @@ generating iframe code, API endpoints, and managing embed configurations.
 import base64
 import logging
 from datetime import datetime, timedelta
-from typing import Optional, Any
+from typing import Any, Optional
 from urllib.parse import urlencode
 
 from .exceptions import EmbedError

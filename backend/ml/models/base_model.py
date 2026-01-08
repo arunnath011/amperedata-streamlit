@@ -7,7 +7,7 @@ Abstract base class that all RUL prediction models must implement.
 
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Any, Optional, Dict, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import joblib
 import numpy as np

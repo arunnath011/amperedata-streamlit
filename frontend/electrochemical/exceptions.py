@@ -4,7 +4,7 @@ This module defines custom exception classes for various electrochemical
 analysis and visualization errors.
 """
 
-from typing import Optional, Any
+from typing import Any, Optional
 
 
 class ElectrochemicalError(Exception):

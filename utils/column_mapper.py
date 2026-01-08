@@ -10,10 +10,10 @@ Features:
 - Mapping persistence and reuse
 - Validation and preview
 """
-from typing import Optional
 
 import json
 from dataclasses import dataclass, field
+from typing import Optional
 
 import pandas as pd
 

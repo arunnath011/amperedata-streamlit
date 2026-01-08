@@ -11,8 +11,8 @@ Professional chart types for electrochemical analysis:
 
 All charts are publication-ready with professional styling.
 """
-from typing import Optional
 
+from typing import Optional
 
 import numpy as np
 import pandas as pd

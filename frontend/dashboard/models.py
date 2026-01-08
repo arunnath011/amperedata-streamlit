@@ -7,7 +7,7 @@ layouts, widgets, permissions, versioning, and embedding configurations.
 import uuid
 from datetime import datetime
 from enum import Enum
-from typing import Any, Union, Optional
+from typing import Any, Optional, Union
 
 from pydantic import BaseModel, Field
 

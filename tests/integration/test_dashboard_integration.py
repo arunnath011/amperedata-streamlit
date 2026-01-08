@@ -29,7 +29,6 @@ from frontend.dashboard.models import (
     WidgetPosition,
     WidgetType,
 )
-from frontend.visualization.models import ChartConfig, ChartData, ChartType
 from frontend.dashboard.permissions import (
     AccessController,
     AccessResult,
@@ -38,6 +37,7 @@ from frontend.dashboard.permissions import (
 )
 from frontend.dashboard.storage import DashboardStorage
 from frontend.dashboard.templates import RoleBasedTemplates
+from frontend.visualization.models import ChartConfig, ChartData, ChartType
 
 
 class TestDashboardWorkflow:
@@ -175,7 +175,9 @@ class TestDashboardWorkflow:
         rendered = self.builder.render_dashboard()
 
         assert rendered["name"] == "Battery Analysis Dashboard"
-        assert len(rendered["widgets"]) >= 8  # 4 KPIs + 1 chart + 3 metrics + 1 table (may have more)
+        assert (
+            len(rendered["widgets"]) >= 8
+        )  # 4 KPIs + 1 chart + 3 metrics + 1 table (may have more)
 
         # Verify widget types
         widget_types = {}
@@ -219,12 +221,14 @@ class TestDashboardWorkflow:
 
         # Mock save/load due to Pydantic V2 serialization issues
         # In real usage, storage should use model_dump_json instead of json()
-        with patch.object(self.storage, 'save_dashboard', return_value=True) as mock_save:
+        with patch.object(self.storage, "save_dashboard", return_value=True) as mock_save:
             success = await mock_save(original_config)
             assert success is True
 
         # For load, return the original config as a mock
-        with patch.object(self.storage, 'load_dashboard', return_value=original_config) as mock_load:
+        with patch.object(
+            self.storage, "load_dashboard", return_value=original_config
+        ) as mock_load:
             loaded_config = await mock_load(original_config.id)
 
         assert loaded_config is not None

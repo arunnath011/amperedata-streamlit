@@ -154,9 +154,9 @@ def load_battery_data(battery_ids, db_path_str: str):
             WHERE battery_id IN ('{battery_list}')
             ORDER BY battery_id, cycle_number
         """
-        
+
         all_data = pd.read_sql_query(query, conn)
-        
+
         # Load resistance data in batch
         res_query = f"""
             SELECT battery_id, re_ohms as Re, rct_ohms as Rct
@@ -165,36 +165,36 @@ def load_battery_data(battery_ids, db_path_str: str):
         """
         try:
             res_data = pd.read_sql_query(res_query, conn)
-            res_dict = res_data.set_index('battery_id').to_dict('index')
+            res_dict = res_data.set_index("battery_id").to_dict("index")
         except Exception:
             res_dict = {}
-        
+
         # Split by battery_id
         for battery_id in battery_ids:
-            df = all_data[all_data['battery_id'] == battery_id].copy()
-            
+            df = all_data[all_data["battery_id"] == battery_id].copy()
+
             if not df.empty:
-                df = df.drop(columns=['battery_id'])
-                
+                df = df.drop(columns=["battery_id"])
+
                 # Fill NULL values
                 df["discharge_capacity"] = df["discharge_capacity"].fillna(0.0)
-                
+
                 # Use reasonable defaults for derived calculations
                 # Voltage: estimate from typical Li-ion nominal voltage
                 df["voltage"] = 3.7  # Nominal Li-ion voltage
                 df["current"] = df["discharge_capacity"] / 2.0  # Estimate based on C/2 rate
                 df["temperature_C"] = 25.0  # Room temperature default
                 df["time_h"] = 2.0  # Approximate cycle time
-                
+
                 # Derived columns
                 df["energy_Wh"] = df["voltage"] * df["discharge_capacity"]
                 df["power_W"] = df["voltage"] * df["current"].abs()
-                
+
                 # Add resistance data if available
                 if battery_id in res_dict:
                     df["Re"] = res_dict[battery_id].get("Re", 0.0)
                     df["Rct"] = res_dict[battery_id].get("Rct", 0.0)
-                
+
                 batteries_data[battery_id] = df
 
         return batteries_data

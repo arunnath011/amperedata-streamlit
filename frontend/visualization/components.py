@@ -519,9 +519,9 @@ class BoxPlot(BaseChart):
 
         trace = go.Box(
             y=data.y,
-            x=data.x
-            if len(set(data.x)) < len(data.x)
-            else None,  # Use x for grouping if categorical
+            x=(
+                data.x if len(set(data.x)) < len(data.x) else None
+            ),  # Use x for grouping if categorical
             name=self.config.title or "Box Plot",
             marker=dict(color=style.color, opacity=style.opacity),
             boxpoints=self.config.custom_config.get("boxpoints", "outliers"),

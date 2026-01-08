@@ -10,11 +10,11 @@ Supports multiple export formats:
 - Parquet (compressed, fast)
 - Publication-ready charts (PNG, SVG, PDF)
 """
-from typing import Optional
 
 import zipfile
 from datetime import datetime
 from pathlib import Path
+from typing import Optional
 
 import pandas as pd
 

@@ -7,7 +7,7 @@ unit conversion, normalization, and custom transformations.
 import re
 from abc import ABC, abstractmethod
 from datetime import datetime
-from typing import Any, Optional, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd

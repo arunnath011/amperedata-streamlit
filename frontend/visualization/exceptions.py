@@ -4,7 +4,7 @@ This module defines custom exceptions for visualization operations,
 chart rendering, data formatting, and export failures.
 """
 
-from typing import Optional, Any
+from typing import Any, Optional
 
 
 class VisualizationError(Exception):

@@ -131,9 +131,11 @@ def ingest_file_task(self, job_id: str) -> Dict[str, Any]:
             file_metadata=metadata if isinstance(metadata, dict) else {},
             parser_used=parser.__class__.__name__,
             parsing_duration_seconds=parsing_duration,
-            data_quality_score=getattr(parsed_result, "data_quality_score", None)
-            if "parsed_result" in locals()
-            else None,
+            data_quality_score=(
+                getattr(parsed_result, "data_quality_score", None)
+                if "parsed_result" in locals()
+                else None
+            ),
             warnings=[],
         )
 
@@ -534,12 +536,12 @@ def load_data_task(self, job_id: str, quality_result: Dict[str, Any]) -> Dict[st
         metadata = {
             "job_id": job_id,
             "ingestion_result": job.ingestion_result.model_dump() if job.ingestion_result else None,
-            "validation_result": job.validation_result.model_dump()
-            if job.validation_result
-            else None,
-            "transformation_result": job.transformation_result.model_dump()
-            if job.transformation_result
-            else None,
+            "validation_result": (
+                job.validation_result.model_dump() if job.validation_result else None
+            ),
+            "transformation_result": (
+                job.transformation_result.model_dump() if job.transformation_result else None
+            ),
             "quality_result": job.quality_result.model_dump() if job.quality_result else None,
             "output_files": output_files,
             "processing_completed_at": datetime.utcnow().isoformat(),
