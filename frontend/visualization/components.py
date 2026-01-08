@@ -204,12 +204,12 @@ class BaseChart(ABC):
             }
             self.figure.update_scenes(zaxis=z_axis_config)
 
-    def _apply_styling(self) -> None:
+    def _apply_styling(self) -> None:  # noqa: B027
         """Apply styling configuration to traces.
 
         Override in subclasses for specific styling behavior.
+        Default implementation does nothing - subclasses may override.
         """
-        pass  # Default implementation - subclasses may override
 
     def _configure_interactions(self) -> None:
         """Configure chart interactions."""
