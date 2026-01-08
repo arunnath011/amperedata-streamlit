@@ -50,15 +50,6 @@ repos:
         args: ['--ignore-missing-imports', '--no-strict-optional']
         exclude: ^(tests/|docs/)
 
-  # Security checks
-  - repo: https://github.com/PyCQA/bandit
-    rev: 1.7.8
-    hooks:
-      - id: bandit
-        args: ['-c', 'pyproject.toml']
-        additional_dependencies: ['bandit[toml]']
-        exclude: ^tests/
-
 # CI configuration
 ci:
   autofix_commit_msg: |

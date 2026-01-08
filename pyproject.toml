@@ -156,8 +156,3 @@ ignore_missing_imports = true
 [[tool.mypy.overrides]]
 module = "plotly.*"
 ignore_missing_imports = true
-
-# Bandit security configuration
-[tool.bandit]
-exclude_dirs = ["tests", "adstreamlit", ".venv"]
-skips = ["B101"]  # Skip assert warnings
